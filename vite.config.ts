@@ -11,6 +11,9 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["icons/pwa-icon-placeholder-180.png"],
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+      },
       manifest: {
         name: "La Bombita",
         short_name: "La Bombita",
