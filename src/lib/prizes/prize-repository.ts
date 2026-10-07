@@ -2,6 +2,7 @@ import { INDEX_NAMES, STORE_NAMES } from "@/lib/db/constants"
 import { getDatabase } from "@/lib/db/database"
 import { normalizePrizeName } from "@/lib/prizes/normalize-prize-name"
 import { PRIZE_ERROR_CODES, PrizeDomainError } from "@/lib/prizes/prize-errors"
+import { createPrizeRecord } from "@/lib/prizes/prize-record"
 import type { Prize } from "@/types/prize"
 
 function isConstraintError(error: unknown): boolean {
@@ -28,14 +29,7 @@ export async function createPrize(value: string): Promise<Prize> {
   const { name, normalizedName } = normalizePrizeName(value)
   requirePrizeName(name)
 
-  const timestamp = new Date().toISOString()
-  const prize: Prize = {
-    id: crypto.randomUUID(),
-    name,
-    normalizedName,
-    createdAt: timestamp,
-    updatedAt: timestamp,
-  }
+  const prize = createPrizeRecord({ name, normalizedName })
 
   const database = await getDatabase()
 
