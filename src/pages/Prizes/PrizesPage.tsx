@@ -11,9 +11,13 @@ import { Card, CardContent } from "@/components/ui/card"
 import { usePrizes } from "@/hooks/use-prizes"
 import type { Prize } from "@/types/prize"
 
-export function PrizesPage() {
+type PrizesPageProps = {
+  openCreateOnMount?: boolean
+}
+
+export function PrizesPage({ openCreateOnMount = false }: PrizesPageProps) {
   const { addPrize, editPrize, isLoading, loadError, prizes, removePrize } = usePrizes()
-  const [formPrize, setFormPrize] = useState<Prize | null | undefined>()
+  const [formPrize, setFormPrize] = useState<Prize | null | undefined>(openCreateOnMount ? null : undefined)
   const [prizeToDelete, setPrizeToDelete] = useState<Prize>()
   const prizeCountLabel = `${prizes.length} ${prizes.length === 1 ? "premio" : "premios"}`
 
