@@ -44,7 +44,7 @@ export function DeletePrizeDialog({ onCancel, onDelete, prize }: DeletePrizeDial
             Este premio dejará de estar disponible para futuros sorteos.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <p className="mt-4 break-words rounded-lg bg-violet-50 p-3 text-sm font-bold text-slate-900">{prize.name}</p>
+        <p className="mt-4 break-words rounded-lg bg-red-50 p-3 text-sm font-bold text-slate-900">{prize.name}</p>
         <AlertDialogFooter>
           <AlertDialogCancel className="h-11" disabled={isDeleting}>
             Cancelar

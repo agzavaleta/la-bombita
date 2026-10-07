@@ -8,8 +8,8 @@ function Toaster(props: ToasterProps) {
         classNames: {
           toast: "font-sans border-slate-200 bg-white text-slate-900",
           description: "text-slate-500",
-          actionButton: "bg-violet-600 text-white",
-          cancelButton: "bg-violet-100 text-violet-700",
+          actionButton: "bg-red-600 text-white",
+          cancelButton: "bg-red-100 text-red-700",
         },
       }}
       {...props}

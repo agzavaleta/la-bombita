@@ -22,7 +22,7 @@ function SheetContent({ className, children, ...props }: ComponentProps<typeof D
         {...props}
       >
         {children}
-        <DialogPrimitive.Close className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-lg text-slate-500 hover:bg-violet-100 hover:text-violet-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600">
+        <DialogPrimitive.Close className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-lg text-slate-500 hover:bg-red-100 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600">
           <X className="size-5" />
           <span className="sr-only">Cerrar</span>
         </DialogPrimitive.Close>

@@ -37,7 +37,7 @@ export function BottomNavigation({ activeSection, onSectionChange }: BottomNavig
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex min-h-16 w-full flex-col items-center justify-center gap-1 px-2 text-xs font-bold transition-colors",
-                  isActive ? "bg-violet-100 text-violet-700" : "text-slate-500 hover:text-violet-600",
+                  isActive ? "bg-red-100 text-red-700" : "text-slate-500 hover:text-red-600",
                 )}
                 onClick={() => onSectionChange(section)}
               >

@@ -21,7 +21,7 @@ export function App() {
   const ActivePage = pages[activeSection]
 
   return (
-    <div className="mx-auto min-h-dvh w-full max-w-md bg-violet-50 text-slate-900">
+    <div className="mx-auto min-h-dvh w-full max-w-md bg-red-50 text-slate-900">
       <main className="px-5 pb-28 pt-[max(2rem,env(safe-area-inset-top))]">
         <ActivePage />
       </main>

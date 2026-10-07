@@ -114,7 +114,7 @@ export function PrizeFormSheet({ onClose, onSave, prize }: PrizeFormSheetProps) 
                 autoFocus
                 aria-invalid={fieldError ? true : undefined}
                 aria-describedby={fieldError ? errorId : undefined}
-                className={fieldError ? "border-rose-500 focus-visible:ring-rose-500" : undefined}
+                className={fieldError ? "border-rose-600 focus-visible:ring-rose-600" : undefined}
                 disabled={isSaving}
                 onChange={(event) => {
                   setName(event.target.value)
@@ -122,7 +122,7 @@ export function PrizeFormSheet({ onClose, onSave, prize }: PrizeFormSheetProps) 
                 }}
               />
               {fieldError ? (
-                <p id={errorId} role="alert" className="text-sm font-semibold text-rose-500">
+                <p id={errorId} role="alert" className="text-sm font-semibold text-rose-600">
                   {fieldError}
                 </p>
               ) : null}

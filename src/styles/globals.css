@@ -10,7 +10,7 @@
   }
 
   html {
-    background: theme(colors.violet.50);
+    background: theme(colors.red.50);
     font-family: var(--font-sans);
   }
 
@@ -18,7 +18,7 @@
     min-width: 320px;
     min-height: 100dvh;
     margin: 0;
-    background: theme(colors.violet.50);
+    background: theme(colors.red.50);
     color: theme(colors.slate.900);
     font-family: var(--font-sans);
     text-rendering: optimizeLegibility;

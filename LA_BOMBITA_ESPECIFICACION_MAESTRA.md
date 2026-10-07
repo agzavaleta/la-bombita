@@ -638,18 +638,18 @@ Usar colores Tailwind.
 
 | Uso | Tailwind |
 |---|---|
-| Fondo general | `violet-50` |
+| Fondo general | `red-50` |
 | Superficies | `white` |
-| Principal | `violet-600` |
-| Principal activo | `violet-700` |
-| Principal suave | `violet-100` |
+| Principal | `red-600` |
+| Principal activo | `red-700` |
+| Principal suave | `red-100` |
 | Acento premio | `amber-400` |
 | Acento suave | `amber-100` |
 | Texto principal | `slate-900` |
 | Texto secundario | `slate-500` |
 | Bordes | `slate-200` |
 | Éxito | `emerald-500` |
-| Error | `rose-500` |
+| Error / destructivo | `rose-600` |
 
 ### Raspado
 
