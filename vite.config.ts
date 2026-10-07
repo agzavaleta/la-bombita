@@ -10,6 +10,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
+      includeAssets: ["icons/pwa-icon-placeholder-180.png"],
       manifest: {
         name: "La Bombita",
         short_name: "La Bombita",
@@ -18,6 +19,20 @@ export default defineConfig({
         background_color: "#fef2f2",
         theme_color: "#dc2626",
         lang: "es",
+        icons: [
+          {
+            src: "/icons/pwa-icon-placeholder-192.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/icons/pwa-icon-placeholder-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any maskable",
+          },
+        ],
       },
     }),
   ],

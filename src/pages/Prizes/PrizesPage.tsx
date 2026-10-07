@@ -2,6 +2,7 @@ import { Plus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
+import { LoadErrorState } from "@/components/LoadErrorState"
 import { DeletePrizeDialog } from "@/components/prizes/DeletePrizeDialog"
 import { PrizeCard } from "@/components/prizes/PrizeCard"
 import { PrizeFormSheet } from "@/components/prizes/PrizeFormSheet"
@@ -42,12 +43,14 @@ export function PrizesPage({ openCreateOnMount = false }: PrizesPageProps) {
         <h1 id="prizes-title" className="text-3xl font-extrabold tracking-tight">
           Mis premios
         </h1>
-        <p className="text-sm font-semibold text-slate-500" aria-live="polite">
-          {prizeCountLabel}
-        </p>
+        {!isLoading && !loadError ? (
+          <p className="text-sm font-semibold text-slate-500" aria-live="polite">
+            {prizeCountLabel}
+          </p>
+        ) : null}
       </header>
 
-      {!isLoading && prizes.length > 0 ? (
+      {!isLoading && !loadError && prizes.length > 0 ? (
         <Button type="button" size="lg" className="w-full" onClick={() => setFormPrize(null)}>
           <Plus aria-hidden="true" className="size-5" />
           Agregar premio
@@ -58,6 +61,8 @@ export function PrizesPage({ openCreateOnMount = false }: PrizesPageProps) {
         <Card aria-live="polite">
           <CardContent className="p-6 text-center text-sm text-slate-500">Cargando premios…</CardContent>
         </Card>
+      ) : loadError ? (
+        <LoadErrorState message="No se pudieron cargar los premios." />
       ) : prizes.length === 0 ? (
         <PrizesEmptyState onAdd={() => setFormPrize(null)} />
       ) : (

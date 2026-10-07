@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { toast } from "sonner"
 
+import { LoadErrorState } from "@/components/LoadErrorState"
 import { FlatPrizeScene } from "@/components/scratch/FlatPrizeScene"
 import { HomeEmptyState } from "@/components/scratch/HomeEmptyState"
 import { ScratchCard } from "@/components/scratch/ScratchCard"
@@ -47,6 +48,17 @@ export function HomePage({ onAddFirstPrize }: HomePageProps) {
         <Card aria-live="polite">
           <CardContent className="p-6 text-center text-sm text-slate-500">Cargando…</CardContent>
         </Card>
+      </section>
+    )
+  }
+
+  if (loadError) {
+    return (
+      <section aria-labelledby="home-title" className="space-y-6">
+        <h1 id="home-title" className="text-3xl font-extrabold tracking-tight">
+          Inicio
+        </h1>
+        <LoadErrorState message="No se pudo cargar el premio del día." />
       </section>
     )
   }
