@@ -1,7 +1,8 @@
-import { BookOpen, Download, Upload } from "lucide-react"
+import { BookOpen, Download, RotateCcw, Upload } from "lucide-react"
 import { useRef, useState, type ChangeEvent } from "react"
 import { toast } from "sonner"
 
+import { DailyPrizeResetDialog } from "@/components/settings/DailyPrizeResetDialog"
 import { PrizeImportSheet } from "@/components/settings/PrizeImportSheet"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -60,6 +61,7 @@ export function SettingsPage({ onOpenTulinStory }: SettingsPageProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [pendingImport, setPendingImport] = useState<PendingImport>()
   const [isExporting, setIsExporting] = useState(false)
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
 
   async function handleExport() {
     setIsExporting(true)
@@ -150,6 +152,25 @@ export function SettingsPage({ onOpenTulinStory }: SettingsPageProps) {
 
       <Card>
         <CardHeader>
+          <CardTitle>Herramientas de desarrollo</CardTitle>
+          <CardDescription>Temporal · solo desarrollo. Debe retirarse antes de la versión final.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button
+            type="button"
+            size="lg"
+            variant="outline"
+            className="w-full"
+            onClick={() => setIsResetDialogOpen(true)}
+          >
+            <RotateCcw aria-hidden="true" className="size-5" />
+            Reiniciar premio del día
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Acerca de</CardTitle>
         </CardHeader>
         <CardContent>
@@ -165,6 +186,8 @@ export function SettingsPage({ onOpenTulinStory }: SettingsPageProps) {
           onClose={() => setPendingImport(undefined)}
         />
       ) : null}
+
+      {isResetDialogOpen ? <DailyPrizeResetDialog onClose={() => setIsResetDialogOpen(false)} /> : null}
     </section>
   )
 }

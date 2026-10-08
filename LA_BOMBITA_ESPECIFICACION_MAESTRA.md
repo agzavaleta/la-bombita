@@ -509,6 +509,14 @@ La versión no debe duplicarse manualmente en varios archivos.
 
 Debe existir una fuente única de versión, idealmente `package.json`, y la interfaz debe leer ese valor.
 
+## 11.4 Herramienta temporal de desarrollo
+
+Mientras la app permanece en desarrollo, Ajustes muestra una sección claramente identificada como **Herramientas de desarrollo** con la acción **Reiniciar premio del día**.
+
+Esta acción requiere confirmación y elimina únicamente el registro `current-daily-prize` de IndexedDB para permitir volver a probar el raspado durante el mismo día. Debe conservar intactos los premios, la caché, el service worker, la importación/exportación y cualquier otro dato.
+
+Esta herramienta no forma parte de las funcionalidades de la v1.0.0 y debe retirarse antes de la versión final.
+
 ---
 
 # 12. Respaldo de premios
