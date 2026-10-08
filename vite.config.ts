@@ -10,7 +10,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "prompt",
-      includeAssets: ["icons/pwa-icon-placeholder-180.png"],
+      includeAssets: ["icons/apple-touch-icon.png", "icons/favicon.ico"],
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
       },
@@ -24,16 +24,28 @@ export default defineConfig({
         lang: "es",
         icons: [
           {
-            src: "/icons/pwa-icon-placeholder-192.png",
+            src: "/icons/pwa-icon-192.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "any",
           },
           {
-            src: "/icons/pwa-icon-placeholder-512.png",
+            src: "/icons/pwa-icon-512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable",
+            purpose: "any",
+          },
+          {
+            src: "/icons/pwa-icon-maskable-192.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "maskable",
+          },
+          {
+            src: "/icons/pwa-icon-maskable-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
           },
         ],
       },
