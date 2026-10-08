@@ -17,7 +17,7 @@ Este documento es la fuente de verdad funcional, visual y técnica para trabajar
 
 La Bombita es una aplicación móvil de premios aleatorios de uso personal.
 
-Cada instalación funciona de manera independiente. El usuario crea su propio universo de premios, puede administrarlo libremente y una vez al día puede raspar una composición protagonizada por Tulín Bombín y una bomba para descubrir el premio del día.
+Cada instalación funciona de manera independiente. El usuario crea su propio universo de premios, puede administrarlo libremente y una vez al día puede raspar la chispa de una bomba encendida para descubrir el premio del día junto a Tulín Bombín.
 
 No hay cuentas, login, sincronización entre dispositivos ni historial de premios en la v1.0.0.
 
@@ -223,23 +223,18 @@ El CTA abre directamente el flujo de creación de premio.
 
 ## 9.2 Estado premio disponible
 
-La composición principal se basa en:
+La composición principal muestra la **bomba encendida**.
 
-- Tulín Bombín al lado izquierdo.
-- La bomba a la derecha o centro-derecha.
-- La bomba debe respetar visualmente la forma de la ilustración de referencia definida para el proyecto.
-- Tulín no va sentado sobre la bomba en la versión final del raspado.
-- Tulín aparece apoyado al lado izquierdo para liberar espacio horizontal.
+Tulín no aparece todavía: se presenta después de completar el raspado y la explosión.
 
 ### Zona raspable
 
-Idealmente toda la composición debe quedar cubierta por la superficie raspable:
+La única zona visible raspable es la **chispa de la mecha**.
 
-- Tulín;
-- bomba;
-- área del premio.
-
-El usuario debe poder pasar el dedo por toda esa zona y descubrir progresivamente la ilustración y el premio.
+- No cubrir ni raspar toda la tarjeta.
+- El área táctil puede ser mayor que la chispa visible para facilitar el gesto con el dedo.
+- La selección del premio comienza únicamente cuando existe un desplazamiento real de raspado, no al abrir la app ni con solo mostrar la bomba.
+- En ese primer gesto se selecciona y persiste inmediatamente el premio con `prizeNameSnapshot`.
 
 ### Texto previo
 
@@ -253,7 +248,7 @@ No usar el texto “Raspa aquí” como texto principal.
 
 ## 9.3 Premio revelado
 
-El premio debe aparecer principalmente integrado dentro de la bomba.
+Después de la explosión debe aparecer `tulin-prize-reveal.png` mostrando el premio en un globo, cartel o tarjeta visualmente asociada a Tulín.
 
 Reglas:
 
@@ -266,8 +261,7 @@ Reglas:
 
 Ejemplo:
 
-**Masaje de pies**  
-**5 minutos**
+**Masaje de pies**
 
 ---
 
@@ -277,11 +271,11 @@ El raspado debe sentirse lo más real posible dentro de una app web móvil.
 
 ### Técnica
 
-- Canvas nativo superpuesto sobre la composición.
+- Canvas nativo superpuesto únicamente sobre la chispa.
 - Interacción táctil mediante pointer events.
 - Uso de máscara o `destination-out`.
 - El dedo borra realmente la capa superior.
-- El contenido inferior aparece exactamente por donde pasa el usuario.
+- La chispa aparece exactamente por donde pasa el usuario.
 
 ### Superficie raspable
 
@@ -303,10 +297,12 @@ Debe simular una superficie de raspe real:
 
 ### Umbral de revelado
 
-Al alcanzar aproximadamente **60%** del área raspada:
+Al completar aproximadamente la totalidad de la chispa, con una tolerancia adecuada para el dedo:
 
-- completar el revelado automáticamente;
-- retirar suavemente la superficie restante;
+- completar el raspado automáticamente;
+- retirar la superficie restante de la chispa;
+- marcar el premio como revelado;
+- iniciar la secuencia breve de explosión;
 - bloquear nuevos sorteos;
 - persistir el resultado del día.
 
@@ -324,12 +320,11 @@ Al alcanzar aproximadamente **60%** del área raspada:
 
 Al revelar el premio:
 
-- Tulín cambia a una expresión de celebración.
-- Puede haber una animación flat breve.
-- Puede encenderse brevemente la mecha.
-- Puede usarse confeti flat discreto.
-- Puede incorporarse vibración breve si el dispositivo lo permite.
-- Puede incorporarse sonido de raspado y sonido de revelado si se implementan de forma ligera.
+- la bomba vibra brevemente;
+- aparece un flash o explosión flat ligera;
+- pueden aparecer partículas o chispas discretas;
+- la bomba desaparece;
+- aparece Tulín en la pose `tulin-prize-reveal.png` junto al premio.
 
 No sobrecargar la experiencia.
 
@@ -342,7 +337,7 @@ Si el usuario vuelve a abrir la app el mismo día:
 - debe ver el mismo premio;
 - no debe reaparecer la superficie raspable;
 - no debe poder volver a sortear;
-- debe mostrarse la composición descubierta.
+- debe mostrarse directamente a Tulín con el premio guardado en `prizeNameSnapshot`.
 
 Texto inferior recomendado:
 
@@ -897,7 +892,7 @@ La versión 1.0.0 estará lista cuando:
 - solo pueda descubrirse un premio por día;
 - el resultado persista al cerrar y abrir;
 - el raspado funcione fluidamente con el dedo;
-- el premio se autorevele cerca del 60%;
+- el premio se autorevele al completar aproximadamente la totalidad de la chispa;
 - la app se desbloquee al nuevo día;
 - exportar genere un respaldo válido;
 - importar funcione en modo reemplazar y agregar;
@@ -914,8 +909,6 @@ La versión 1.0.0 estará lista cuando:
 
 # 25. Pendientes que no bloquean el desarrollo inicial
 
-- Ilustración flat definitiva de Tulín.
-- Ilustración flat definitiva de la bomba.
 - Icono final de PWA.
 - Contenido narrativo definitivo de la historia de Tulín.
 - Sonido final de raspado.

@@ -1,9 +1,9 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 import { LoadErrorState } from "@/components/LoadErrorState"
-import { FlatPrizeScene } from "@/components/scratch/FlatPrizeScene"
 import { HomeEmptyState } from "@/components/scratch/HomeEmptyState"
+import { PrizeRevealScene } from "@/components/scratch/PrizeRevealScene"
 import { ScratchCard } from "@/components/scratch/ScratchCard"
 import { Card, CardContent } from "@/components/ui/card"
 import { useDailyPrize } from "@/hooks/use-daily-prize"
@@ -14,6 +14,7 @@ type HomePageProps = {
 
 export function HomePage({ onAddFirstPrize }: HomePageProps) {
   const { beginScratch, dailyPrize, isLoading, loadError, prizes, revealPrize } = useDailyPrize()
+  const [isRevealSequenceActive, setIsRevealSequenceActive] = useState(false)
 
   useEffect(() => {
     if (loadError) {
@@ -31,9 +32,18 @@ export function HomePage({ onAddFirstPrize }: HomePageProps) {
   }
 
   async function completeReveal(): Promise<boolean> {
+    setIsRevealSequenceActive(true)
+
     try {
-      return await revealPrize()
+      const revealed = await revealPrize()
+
+      if (!revealed) {
+        setIsRevealSequenceActive(false)
+      }
+
+      return revealed
     } catch {
+      setIsRevealSequenceActive(false)
       toast.error("No se pudo guardar el premio revelado. Inténtalo nuevamente.")
       return false
     }
@@ -80,11 +90,11 @@ export function HomePage({ onAddFirstPrize }: HomePageProps) {
         Premio del día
       </h1>
 
-      {dailyPrize?.revealed ? (
+      {dailyPrize?.revealed && !isRevealSequenceActive ? (
         <Card>
           <CardContent className="space-y-5 p-4">
-            <div className="aspect-[4/3] overflow-hidden rounded-2xl border border-border">
-              <FlatPrizeScene prizeName={dailyPrize.prizeNameSnapshot} />
+            <div className="animate-tulin-reveal">
+              <PrizeRevealScene prizeName={dailyPrize.prizeNameSnapshot} />
             </div>
             <p className="text-center text-sm font-bold text-slate-500">Nuevo premio disponible mañana</p>
           </CardContent>
@@ -93,11 +103,11 @@ export function HomePage({ onAddFirstPrize }: HomePageProps) {
         <Card>
           <CardContent className="space-y-4 p-4">
             <ScratchCard
-              prizeName={dailyPrize?.prizeNameSnapshot}
               onScratchStart={startScratch}
               onReveal={completeReveal}
+              onSequenceComplete={() => setIsRevealSequenceActive(false)}
             />
-            <p className="text-center text-sm text-slate-500">Desliza el dedo sobre la superficie para descubrirlo.</p>
+            <p className="text-center text-sm text-slate-500">Raspa la chispa para descubrir tu premio.</p>
           </CardContent>
         </Card>
       )}

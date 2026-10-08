@@ -17,6 +17,84 @@
   --color-destructive: #e11d48;
 }
 
+@keyframes bomb-shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  20% {
+    transform: translateX(-5px) rotate(-2deg);
+  }
+  40% {
+    transform: translateX(5px) rotate(2deg);
+  }
+  60% {
+    transform: translateX(-4px) rotate(-1deg);
+  }
+  80% {
+    transform: translateX(4px) rotate(1deg);
+  }
+}
+
+@keyframes explosion-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+@keyframes spark-burst {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
+}
+
+@keyframes tulin-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-bomb-shake {
+  animation: bomb-shake 520ms ease-in-out;
+}
+
+.animate-explosion-flash {
+  animation: explosion-flash 620ms ease-out forwards;
+}
+
+.animate-spark-burst {
+  animation: spark-burst 520ms steps(4) forwards;
+}
+
+.animate-tulin-reveal {
+  animation: tulin-reveal 360ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-bomb-shake,
+  .animate-explosion-flash,
+  .animate-spark-burst,
+  .animate-tulin-reveal {
+    animation-duration: 1ms;
+  }
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
