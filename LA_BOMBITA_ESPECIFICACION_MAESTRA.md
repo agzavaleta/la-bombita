@@ -769,6 +769,8 @@ La PWA debe definir:
 - manifest;
 - service worker.
 
+Cuando el service worker detecte una nueva versión lista para instalar, mostrar un aviso persistente y discreto con el texto `Hay una nueva versión de La Bombita disponible.` y la acción `Actualizar ahora`. La acción debe activar el nuevo service worker y recargar la aplicación. El aviso no debe usar un diálogo invasivo ni interrumpir formularios u operaciones activas.
+
 No cerrar icono definitivo hasta tener la ilustración final aprobada.
 
 ---

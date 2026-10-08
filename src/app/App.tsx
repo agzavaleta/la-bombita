@@ -1,15 +1,13 @@
 import { useState } from "react"
-import { registerSW } from "virtual:pwa-register"
 
 import { BottomNavigation } from "@/components/navigation/BottomNavigation"
+import { PwaUpdatePrompt } from "@/components/pwa/PwaUpdatePrompt"
 import { Toaster } from "@/components/ui/sonner"
 import { HomePage } from "@/pages/Home/HomePage"
 import { PrizesPage } from "@/pages/Prizes/PrizesPage"
 import { SettingsPage } from "@/pages/Settings/SettingsPage"
 import { TulinStoryPage } from "@/pages/TulinStory/TulinStoryPage"
 import type { MainSection } from "@/types/navigation"
-
-registerSW({ immediate: true })
 
 export function App() {
   const [activeSection, setActiveSection] = useState<MainSection>("home")
@@ -32,6 +30,7 @@ export function App() {
         <main className="px-5 pb-10 pt-[max(2rem,env(safe-area-inset-top))]">
           <TulinStoryPage onBack={() => setIsTulinStoryOpen(false)} />
         </main>
+        <PwaUpdatePrompt />
         <Toaster />
       </div>
     )
@@ -44,6 +43,7 @@ export function App() {
         {activeSection === "prizes" ? <PrizesPage openCreateOnMount={openPrizeCreation} /> : null}
         {activeSection === "settings" ? <SettingsPage onOpenTulinStory={() => setIsTulinStoryOpen(true)} /> : null}
       </main>
+      <PwaUpdatePrompt />
       <BottomNavigation activeSection={activeSection} onSectionChange={changeSection} />
       <Toaster />
     </div>
