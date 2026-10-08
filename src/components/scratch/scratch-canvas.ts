@@ -53,6 +53,11 @@ function countOpaqueSamples(canvas: HTMLCanvasElement): number {
 
 export function paintSparkScratchSurface(canvas: HTMLCanvasElement): void {
   const bounds = canvas.getBoundingClientRect()
+
+  if (bounds.width <= 0 || bounds.height <= 0) {
+    return
+  }
+
   const pixelRatio = Math.min(window.devicePixelRatio || 1, 2)
   canvas.width = Math.round(bounds.width * pixelRatio)
   canvas.height = Math.round(bounds.height * pixelRatio)
