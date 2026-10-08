@@ -83,7 +83,7 @@ export function HomePage({ onAddFirstPrize }: HomePageProps) {
       {dailyPrize?.revealed ? (
         <Card>
           <CardContent className="space-y-5 p-4">
-            <div className="aspect-[4/3] overflow-hidden rounded-2xl border border-slate-200">
+            <div className="aspect-[4/3] overflow-hidden rounded-2xl border border-border">
               <FlatPrizeScene prizeName={dailyPrize.prizeNameSnapshot} />
             </div>
             <p className="text-center text-sm font-bold text-slate-500">Nuevo premio disponible mañana</p>

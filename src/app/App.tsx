@@ -28,7 +28,7 @@ export function App() {
 
   if (isTulinStoryOpen) {
     return (
-      <div className="mx-auto min-h-dvh w-full max-w-md bg-red-50 text-slate-900">
+      <div className="mx-auto min-h-dvh w-full max-w-md bg-app-background text-text-primary">
         <main className="px-5 pb-10 pt-[max(2rem,env(safe-area-inset-top))]">
           <TulinStoryPage onBack={() => setIsTulinStoryOpen(false)} />
         </main>
@@ -38,7 +38,7 @@ export function App() {
   }
 
   return (
-    <div className="mx-auto min-h-dvh w-full max-w-md bg-red-50 text-slate-900">
+    <div className="mx-auto min-h-dvh w-full max-w-md bg-app-background text-text-primary">
       <main className="px-5 pb-28 pt-[max(2rem,env(safe-area-inset-top))]">
         {activeSection === "home" ? <HomePage onAddFirstPrize={addFirstPrize} /> : null}
         {activeSection === "prizes" ? <PrizesPage openCreateOnMount={openPrizeCreation} /> : null}

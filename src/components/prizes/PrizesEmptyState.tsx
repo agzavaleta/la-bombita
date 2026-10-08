@@ -11,7 +11,7 @@ export function PrizesEmptyState({ onAdd }: PrizesEmptyStateProps) {
   return (
     <Card>
       <CardContent className="flex flex-col items-center px-6 py-10 text-center">
-        <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-red-100 text-red-700">
+        <div className="mb-4 flex size-14 items-center justify-center rounded-full bg-brand-soft text-brand-active">
           <Gift aria-hidden="true" className="size-7" />
         </div>
         <h2 className="text-xl font-extrabold">Aún no tienes premios</h2>

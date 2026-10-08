@@ -34,7 +34,7 @@ No hay cuentas, login, sincronización entre dispositivos ni historial de premio
 - La UI se construye con **shadcn/ui**.
 - La iconografía usa **Lucide React**.
 - Los estilos y colores se implementan con **Tailwind CSS**.
-- La tipografía principal es **Nunito**.
+- La tipografía principal es **Inter**.
 - La app debe mantenerse simple, clara, rápida y fácil de mantener.
 
 ---
@@ -47,7 +47,7 @@ No hay cuentas, login, sincronización entre dispositivos ni historial de premio
 - Tailwind CSS
 - shadcn/ui
 - Lucide React
-- Nunito
+- Inter
 - IndexedDB
 - Librería liviana tipo `idb` para acceso a IndexedDB
 - Canvas nativo para el efecto de raspado
@@ -634,22 +634,23 @@ Tulín y la bomba también deben respetar este lenguaje.
 
 ## 14.2 Paleta base aprobada
 
-Usar colores Tailwind.
+Centralizar la paleta como tokens reutilizables de Tailwind.
 
-| Uso | Tailwind |
-|---|---|
-| Fondo general | `red-50` |
-| Superficies | `white` |
-| Principal | `red-600` |
-| Principal activo | `red-700` |
-| Principal suave | `red-100` |
-| Acento premio | `amber-400` |
-| Acento suave | `amber-100` |
-| Texto principal | `slate-900` |
-| Texto secundario | `slate-500` |
-| Bordes | `slate-200` |
-| Éxito | `emerald-500` |
-| Error / destructivo | `rose-600` |
+| Uso | Token | Valor |
+|---|---|---|
+| Fondo general | `app-background` | `#FCF7F7` |
+| Superficies | `surface` | `#FFFFFF` |
+| Principal | `brand` | `#B4535A` |
+| Principal activo | `brand-active` | `#98454C` |
+| Principal suave | `brand-soft` | `#F5E4E5` |
+| Principal muy suave | `brand-subtle` | `#FAF0F1` |
+| Acento premio | `prize` | `#D4A74F` |
+| Acento suave | `prize-soft` | `#F8EBCF` |
+| Texto principal | `text-primary` | `slate-900` |
+| Texto secundario | `text-secondary` | `slate-500` |
+| Bordes | `border` | `slate-200` |
+| Éxito | `success` | `emerald-600` |
+| Error / destructivo | `destructive` | `rose-600` |
 
 ### Raspado
 
@@ -665,7 +666,7 @@ La textura puede añadir pequeñas variaciones sin romper el lenguaje general.
 
 # 15. Tipografía
 
-Usar **Nunito** para toda la app.
+Usar **Inter** para toda la app.
 
 Recomendación:
 
@@ -783,7 +784,7 @@ Codex debe respetar estas reglas:
 5. Mantener estilo flat.
 6. Usar shadcn/ui y Lucide.
 7. Usar Tailwind para estilos y colores.
-8. Mantener Nunito como tipografía.
+8. Mantener Inter como tipografía.
 9. No introducir backend ni autenticación.
 10. No reemplazar IndexedDB por otra persistencia sin aprobación.
 11. No usar librerías pesadas para raspado si Canvas nativo resuelve la necesidad.
@@ -904,7 +905,7 @@ La versión 1.0.0 estará lista cuando:
 - no exista historial de premios;
 - no exista login;
 - no exista dependencia de backend;
-- el diseño respete flat + shadcn/ui + Lucide + Tailwind + Nunito;
+- el diseño respete flat + shadcn/ui + Lucide + Tailwind + Inter;
 - la experiencia haya sido probada en móvil real.
 
 ---

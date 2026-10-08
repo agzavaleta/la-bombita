@@ -1,16 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Nunito Variable", sans-serif;
+  --font-sans: "Inter Variable", sans-serif;
+  --color-app-background: #fcf7f7;
+  --color-surface: #ffffff;
+  --color-brand: #b4535a;
+  --color-brand-active: #98454c;
+  --color-brand-soft: #f5e4e5;
+  --color-brand-subtle: #faf0f1;
+  --color-prize: #d4a74f;
+  --color-prize-soft: #f8ebcf;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-border: #e2e8f0;
+  --color-success: #059669;
+  --color-destructive: #e11d48;
 }
 
 @layer base {
   * {
-    border-color: theme(colors.slate.200);
+    border-color: var(--color-border);
   }
 
   html {
-    background: theme(colors.red.50);
+    background: var(--color-app-background);
     font-family: var(--font-sans);
   }
 
@@ -18,8 +31,8 @@
     min-width: 320px;
     min-height: 100dvh;
     margin: 0;
-    background: theme(colors.red.50);
-    color: theme(colors.slate.900);
+    background: var(--color-app-background);
+    color: var(--color-text-primary);
     font-family: var(--font-sans);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;

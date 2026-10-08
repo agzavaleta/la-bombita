@@ -24,7 +24,7 @@ export function BottomNavigation({ activeSection, onSectionChange }: BottomNavig
   return (
     <nav
       aria-label="Navegación principal"
-      className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)]"
+      className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md border-t border-border bg-surface pb-[env(safe-area-inset-bottom)]"
     >
       <ul className="grid grid-cols-3">
         {navigationItems.map(({ icon: Icon, label, section }) => {
@@ -37,7 +37,7 @@ export function BottomNavigation({ activeSection, onSectionChange }: BottomNavig
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex min-h-16 w-full flex-col items-center justify-center gap-1 px-2 text-xs font-bold transition-colors",
-                  isActive ? "bg-red-100 text-red-700" : "text-slate-500 hover:text-red-600",
+                  isActive ? "bg-brand-soft text-brand-active" : "text-text-secondary hover:text-brand",
                 )}
                 onClick={() => onSectionChange(section)}
               >

@@ -70,7 +70,7 @@ export function PrizeImportSheet({ backup, fileName, onClose }: PrizeImportSheet
             <SheetDescription>Elige cómo incorporar los premios del respaldo.</SheetDescription>
           </SheetHeader>
 
-          <div className="mt-6 rounded-xl bg-red-50 p-4">
+          <div className="mt-6 rounded-xl bg-brand-subtle p-4">
             <p className="break-all text-sm font-bold text-slate-900">{fileName}</p>
             <p className="mt-1 text-sm text-slate-500">{getPrizeCountLabel(backup.prizes.length)} validados</p>
           </div>
@@ -109,7 +109,7 @@ export function PrizeImportSheet({ backup, fileName, onClose }: PrizeImportSheet
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
-              className="h-11 bg-rose-600 hover:bg-rose-700"
+              className="h-11 bg-destructive hover:bg-destructive/90"
               disabled={isImporting}
               onClick={(event) => {
                 event.preventDefault()

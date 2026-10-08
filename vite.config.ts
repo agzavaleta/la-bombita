@@ -19,8 +19,8 @@ export default defineConfig({
         short_name: "La Bombita",
         display: "standalone",
         start_url: "/",
-        background_color: "#fef2f2",
-        theme_color: "#dc2626",
+        background_color: "#FCF7F7",
+        theme_color: "#B4535A",
         lang: "es",
         icons: [
           {

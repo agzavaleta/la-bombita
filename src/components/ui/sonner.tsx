@@ -6,10 +6,10 @@ function Toaster(props: ToasterProps) {
       position="top-center"
       toastOptions={{
         classNames: {
-          toast: "font-sans border-slate-200 bg-white text-slate-900",
-          description: "text-slate-500",
-          actionButton: "bg-red-600 text-white",
-          cancelButton: "bg-red-100 text-red-700",
+          toast: "font-sans border-border bg-surface text-text-primary",
+          description: "text-text-secondary",
+          actionButton: "bg-brand text-white",
+          cancelButton: "bg-brand-soft text-brand-active",
         },
       }}
       {...props}

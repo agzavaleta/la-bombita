@@ -199,7 +199,7 @@ export function ScratchCard({ onReveal, onScratchStart, prizeName }: ScratchCard
   }
 
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-slate-200 bg-white">
+    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border bg-surface">
       <FlatPrizeScene prizeName={prizeName} />
       <canvas
         ref={canvasRef}

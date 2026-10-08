@@ -23,7 +23,7 @@ export function PrizeCard({ onDelete, onEdit, prize }: PrizeCardProps) {
           <Button
             type="button"
             variant="outline"
-            className="h-11 text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+            className="h-11 text-destructive hover:bg-destructive/10 hover:text-destructive"
             onClick={() => onDelete(prize)}
           >
             <Trash2 aria-hidden="true" className="size-4" />
