@@ -7,7 +7,7 @@ import {
   eraseScratchPath,
   getRevealedRatio,
   getScratchPoint,
-  paintSparkScratchSurface,
+  paintLitBombCanvas,
   type ScratchPoint,
 } from "@/components/scratch/scratch-canvas"
 
@@ -48,6 +48,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
   const lastProgressCheck = useRef(0)
   const isRevealPending = useRef(false)
   const explosionTimeout = useRef<number | undefined>(undefined)
+  const [isCanvasReady, setIsCanvasReady] = useState(false)
   const [phase, setPhase] = useState<RevealPhase>("ready")
 
   useEffect(() => {
@@ -57,12 +58,29 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
       return
     }
 
-    const paintSurface = () => paintSparkScratchSurface(canvas)
-    paintSurface()
-    const resizeObserver = new ResizeObserver(paintSurface)
+    let isActive = true
+    const litBombImage = new Image()
+    const paintBomb = () => {
+      if (isActive && paintLitBombCanvas(canvas, litBombImage)) {
+        setIsCanvasReady(true)
+      }
+    }
+
+    litBombImage.addEventListener("load", paintBomb)
+    litBombImage.src = bombLit
+
+    if (litBombImage.complete) {
+      paintBomb()
+    }
+
+    const resizeObserver = new ResizeObserver(paintBomb)
     resizeObserver.observe(canvas)
 
-    return () => resizeObserver.disconnect()
+    return () => {
+      isActive = false
+      litBombImage.removeEventListener("load", paintBomb)
+      resizeObserver.disconnect()
+    }
   }, [])
 
   useEffect(
@@ -74,7 +92,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
     [],
   )
 
-  const getPoint = useCallback((event: React.PointerEvent<HTMLCanvasElement>): ScratchPoint | null => {
+  const getPoint = useCallback((event: React.PointerEvent<HTMLDivElement>): ScratchPoint | null => {
     const canvas = canvasRef.current
 
     if (!canvas) {
@@ -154,7 +172,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
     [checkRevealProgress, eraseTo, onScratchStart],
   )
 
-  function handlePointerDown(event: React.PointerEvent<HTMLCanvasElement>) {
+  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
     event.preventDefault()
     const point = getPoint(event)
 
@@ -173,7 +191,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
     }
   }
 
-  function handlePointerMove(event: React.PointerEvent<HTMLCanvasElement>) {
+  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
     const session = scratchSession.current
 
     if (!session || session.pointerId !== event.pointerId) {
@@ -204,7 +222,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
     }
   }
 
-  function finishPointer(event: React.PointerEvent<HTMLCanvasElement>) {
+  function finishPointer(event: React.PointerEvent<HTMLDivElement>) {
     const session = scratchSession.current
 
     if (!session || session.pointerId !== event.pointerId) {
@@ -235,21 +253,30 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
   return (
     <div className="relative aspect-square overflow-hidden rounded-2xl bg-brand-subtle" aria-label="Bomba del premio del día">
       <img
-        alt={phase === "exploding" ? "Bomba a punto de revelar el premio" : "Bomba encendida"}
+        alt={phase === "exploding" ? "Bomba a punto de revelar el premio" : ""}
+        aria-hidden={phase === "ready"}
         className={`absolute inset-0 size-full object-contain p-3 ${phase === "exploding" ? "animate-bomb-shake" : ""}`}
-        src={phase === "exploding" ? bombUnlit : bombLit}
+        src={bombUnlit}
       />
 
       {phase === "ready" ? (
-        <canvas
-          ref={canvasRef}
-          aria-label="Chispa raspable de la mecha"
-          className="absolute left-[69%] top-[1%] size-[29%] touch-none cursor-crosshair"
-          onPointerCancel={finishPointer}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={finishPointer}
-        />
+        <>
+          <img
+            alt="Bomba encendida"
+            className={`absolute inset-0 size-full object-contain p-3 ${isCanvasReady ? "opacity-0" : "opacity-100"}`}
+            src={bombLit}
+          />
+          <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 size-full" />
+          <div
+            aria-label="Chispa raspable de la mecha"
+            className="absolute left-[69%] top-[1%] size-[29%] touch-none cursor-crosshair"
+            onPointerCancel={finishPointer}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={finishPointer}
+            role="img"
+          />
+        </>
       ) : null}
 
       {phase === "exploding" ? (

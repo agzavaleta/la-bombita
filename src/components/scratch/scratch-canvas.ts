@@ -1,97 +1,71 @@
 const BRUSH_SIZE = 30
-const PIXEL_SAMPLE_STEP = 8
-const initialOpaqueSamples = new WeakMap<HTMLCanvasElement, number>()
+const DRAWING_INSET = 12
+const PIXEL_SAMPLE_STEP = 4
+const sparkSampleIndices = new WeakMap<HTMLCanvasElement, number[]>()
 
 export type ScratchPoint = {
   x: number
   y: number
 }
 
-function drawSparkMask(context: CanvasRenderingContext2D, width: number, height: number): void {
-  const centerX = width / 2
-  const centerY = height / 2
-  const outerRadius = Math.min(width, height) * 0.42
-  const innerRadius = outerRadius * 0.56
-  const points = 10
-
-  context.beginPath()
-
-  for (let pointIndex = 0; pointIndex < points * 2; pointIndex += 1) {
-    const radius = pointIndex % 2 === 0 ? outerRadius : innerRadius
-    const angle = -Math.PI / 2 + (pointIndex * Math.PI) / points
-    const x = centerX + Math.cos(angle) * radius
-    const y = centerY + Math.sin(angle) * radius
-
-    if (pointIndex === 0) {
-      context.moveTo(x, y)
-    } else {
-      context.lineTo(x, y)
-    }
+function isSparkPixel(pixels: Uint8ClampedArray, pixelIndex: number, xRatio: number, yRatio: number): boolean {
+  if (xRatio < 0.68 || xRatio > 0.98 || yRatio > 0.34) {
+    return false
   }
 
-  context.closePath()
+  const red = pixels[pixelIndex] ?? 0
+  const green = pixels[pixelIndex + 1] ?? 0
+  const blue = pixels[pixelIndex + 2] ?? 0
+  const alpha = pixels[pixelIndex + 3] ?? 0
+
+  return alpha >= 32 && red >= 210 && green >= 80 && blue <= 110 && red - blue >= 120
 }
 
-function countOpaqueSamples(canvas: HTMLCanvasElement): number {
+function collectSparkSampleIndices(canvas: HTMLCanvasElement): number[] {
   const context = canvas.getContext("2d", { willReadFrequently: true })
 
-  if (!context) {
-    return 0
+  if (!context || canvas.width === 0 || canvas.height === 0) {
+    return []
   }
 
   const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data
-  let opaqueSamples = 0
+  const samples: number[] = []
 
-  for (let alphaIndex = 3; alphaIndex < pixels.length; alphaIndex += 4 * PIXEL_SAMPLE_STEP) {
-    if ((pixels[alphaIndex] ?? 0) >= 32) {
-      opaqueSamples += 1
+  for (let y = 0; y < canvas.height; y += PIXEL_SAMPLE_STEP) {
+    for (let x = 0; x < canvas.width; x += PIXEL_SAMPLE_STEP) {
+      const pixelIndex = (y * canvas.width + x) * 4
+
+      if (isSparkPixel(pixels, pixelIndex, x / canvas.width, y / canvas.height)) {
+        samples.push(pixelIndex + 3)
+      }
     }
   }
 
-  return opaqueSamples
+  return samples
 }
 
-export function paintSparkScratchSurface(canvas: HTMLCanvasElement): void {
+export function paintLitBombCanvas(canvas: HTMLCanvasElement, litBombImage: HTMLImageElement): boolean {
   const bounds = canvas.getBoundingClientRect()
 
-  if (bounds.width <= 0 || bounds.height <= 0) {
-    return
+  if (bounds.width <= 0 || bounds.height <= 0 || !litBombImage.complete || litBombImage.naturalWidth === 0) {
+    return false
   }
 
   const pixelRatio = Math.min(window.devicePixelRatio || 1, 2)
+  const inset = DRAWING_INSET * pixelRatio
   canvas.width = Math.round(bounds.width * pixelRatio)
   canvas.height = Math.round(bounds.height * pixelRatio)
 
   const context = canvas.getContext("2d")
 
   if (!context) {
-    return
+    return false
   }
 
-  context.globalCompositeOperation = "source-over"
   context.clearRect(0, 0, canvas.width, canvas.height)
-  drawSparkMask(context, canvas.width, canvas.height)
-  context.fillStyle = "#cbd5e1"
-  context.fill()
-
-  context.save()
-  drawSparkMask(context, canvas.width, canvas.height)
-  context.clip()
-
-  const textureDots = Math.round((canvas.width * canvas.height) / 180)
-  context.fillStyle = "rgba(100, 116, 139, 0.28)"
-
-  for (let dot = 0; dot < textureDots; dot += 1) {
-    const x = Math.random() * canvas.width
-    const y = Math.random() * canvas.height
-    const radius = Math.random() * 1.6 * pixelRatio + 0.4
-    context.beginPath()
-    context.arc(x, y, radius, 0, Math.PI * 2)
-    context.fill()
-  }
-
-  context.restore()
-  initialOpaqueSamples.set(canvas, countOpaqueSamples(canvas))
+  context.drawImage(litBombImage, inset, inset, canvas.width - inset * 2, canvas.height - inset * 2)
+  sparkSampleIndices.set(canvas, collectSparkSampleIndices(canvas))
+  return true
 }
 
 export function getScratchPoint(canvas: HTMLCanvasElement, clientX: number, clientY: number): ScratchPoint {
@@ -128,12 +102,21 @@ export function eraseScratchPath(
 }
 
 export function getRevealedRatio(canvas: HTMLCanvasElement): number {
-  const initialSamples = initialOpaqueSamples.get(canvas) ?? 0
+  const context = canvas.getContext("2d", { willReadFrequently: true })
+  const samples = sparkSampleIndices.get(canvas) ?? []
 
-  if (initialSamples === 0) {
+  if (!context || samples.length === 0 || canvas.width === 0 || canvas.height === 0) {
     return 0
   }
 
-  const remainingSamples = countOpaqueSamples(canvas)
-  return Math.min(1, Math.max(0, 1 - remainingSamples / initialSamples))
+  const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data
+  let erasedSamples = 0
+
+  samples.forEach((alphaIndex) => {
+    if ((pixels[alphaIndex] ?? 255) < 32) {
+      erasedSamples += 1
+    }
+  })
+
+  return erasedSamples / samples.length
 }

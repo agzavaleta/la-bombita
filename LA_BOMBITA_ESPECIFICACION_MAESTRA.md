@@ -30,7 +30,7 @@ No hay cuentas, login, sincronización entre dispositivos ni historial de premio
 - No se diseña pensando en escritorio.
 - El estilo visual general es **flat design**.
 - No usar glassmorphism, 3D, sombras pesadas ni efectos visuales innecesarios.
-- La única excepción al flat design es la superficie raspable, que puede simular material real para mejorar la experiencia.
+- El raspado desgasta la chispa visible de la bomba sin añadir una superficie artificial encima.
 - La UI se construye con **shadcn/ui**.
 - La iconografía usa **Lucide React**.
 - Los estilos y colores se implementan con **Tailwind CSS**.
@@ -229,9 +229,12 @@ Tulín no aparece todavía: se presenta después de completar el raspado y la ex
 
 ### Zona raspable
 
-La única zona visible raspable es la **chispa de la mecha**.
+La única zona visible raspable es la **propia chispa de la mecha**.
 
 - No cubrir ni raspar toda la tarjeta.
+- No mostrar máscaras grises, plateadas, estrellas ni capas de raspe sobre la chispa.
+- La chispa original de `bomb-lit.png` debe verse completa antes de interactuar.
+- Al mover el dedo, la propia chispa desaparece progresivamente y deja ver `bomb-unlit.png` debajo.
 - El área táctil puede ser mayor que la chispa visible para facilitar el gesto con el dedo.
 - La selección del premio comienza únicamente cuando existe un desplazamiento real de raspado, no al abrir la app ni con solo mostrar la bomba.
 - En ese primer gesto se selecciona y persiste inmediatamente el premio con `prizeNameSnapshot`.
@@ -271,21 +274,15 @@ El raspado debe sentirse lo más real posible dentro de una app web móvil.
 
 ### Técnica
 
-- Canvas nativo superpuesto únicamente sobre la chispa.
+- Superponer la versión encendida sobre `bomb-unlit.png` mediante Canvas.
 - Interacción táctil mediante pointer events.
-- Uso de máscara o `destination-out`.
-- El dedo borra realmente la capa superior.
-- La chispa aparece exactamente por donde pasa el usuario.
+- Uso de `destination-out` para borrar los píxeles reales de la versión encendida.
+- El dedo desgasta la propia chispa exactamente por donde pasa.
+- El Canvas no debe dibujar ninguna máscara o superficie visible adicional.
 
-### Superficie raspable
+### Chispa visible
 
-Debe simular una superficie de raspe real:
-
-- tono gris / plateado;
-- textura granular;
-- pequeñas variaciones visuales;
-- sin parecer 3D;
-- compatible con el lenguaje flat general.
+La chispa actúa como el único indicador visual de la interacción. El área táctil puede extenderse alrededor de ella, pero solo se borran y contabilizan los píxeles reales de la chispa.
 
 ### Pincel
 
@@ -297,10 +294,10 @@ Debe simular una superficie de raspe real:
 
 ### Umbral de revelado
 
-Al completar aproximadamente la totalidad de la chispa, con una tolerancia adecuada para el dedo:
+Al eliminar aproximadamente **85–90%** de la chispa:
 
 - completar el raspado automáticamente;
-- retirar la superficie restante de la chispa;
+- retirar la chispa restante;
 - marcar el premio como revelado;
 - iniciar la secuencia breve de explosión;
 - bloquear nuevos sorteos;
@@ -647,16 +644,6 @@ Centralizar la paleta como tokens reutilizables de Tailwind.
 | Éxito | `success` | `emerald-600` |
 | Error / destructivo | `destructive` | `rose-600` |
 
-### Raspado
-
-Para la superficie raspable se puede trabajar con:
-
-- `slate-300`
-- `slate-400`
-- `zinc-300`
-
-La textura puede añadir pequeñas variaciones sin romper el lenguaje general.
-
 ---
 
 # 15. Tipografía
@@ -892,7 +879,7 @@ La versión 1.0.0 estará lista cuando:
 - solo pueda descubrirse un premio por día;
 - el resultado persista al cerrar y abrir;
 - el raspado funcione fluidamente con el dedo;
-- el premio se autorevele al completar aproximadamente la totalidad de la chispa;
+- el premio se autorevele al eliminar aproximadamente 85–90% de la chispa;
 - la app se desbloquee al nuevo día;
 - exportar genere un respaldo válido;
 - importar funcione en modo reemplazar y agregar;
