@@ -761,6 +761,8 @@ La PWA debe definir:
 
 Cuando el service worker detecte una nueva versión lista para instalar, mostrar un aviso persistente y discreto con el texto `Hay una nueva versión de La Bombita disponible.` y la acción `Actualizar ahora`. La acción debe activar el nuevo service worker y recargar la aplicación. El aviso no debe usar un diálogo invasivo ni interrumpir formularios u operaciones activas.
 
+La app debe solicitar una comprobación de actualización al registrarse el service worker y al volver a primer plano, evitando comprobaciones excesivas mediante una limitación breve de frecuencia. La detección no debe instalar la actualización automáticamente: siempre se conserva la confirmación mediante `Actualizar ahora`.
+
 El icono PWA definitivo está integrado, incluyendo variantes estándar, maskable, favicon y Apple Touch Icon.
 
 ---
