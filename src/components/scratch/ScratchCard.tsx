@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 
 import bombLit from "@/assets/bomb/bomb-lit.png"
 import bombUnlit from "@/assets/bomb/bomb-unlit.png"
-import sparkSheet from "@/assets/bomb/spark-sheet.png"
+import explosionBurst from "@/assets/bomb/explosion-burst.png"
 import {
   eraseScratchPath,
   getRevealedRatio,
@@ -59,6 +59,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
 
     let isActive = true
     const litBombImage = new Image()
+    const explosionImage = new Image()
     const paintBomb = () => {
       if (isActive) {
         paintSparkCanvas(canvas, litBombImage)
@@ -67,6 +68,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
 
     litBombImage.addEventListener("load", paintBomb)
     litBombImage.src = bombLit
+    explosionImage.src = explosionBurst
 
     if (litBombImage.complete) {
       paintBomb()
@@ -253,7 +255,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
     <div className="relative aspect-square overflow-hidden rounded-2xl bg-brand-subtle" aria-label="Bomba del premio del día">
       <img
         alt={phase === "exploding" ? "Bomba a punto de revelar el premio" : "Bomba encendida"}
-        className={`absolute inset-0 size-full object-contain p-3 ${phase === "exploding" ? "animate-bomb-shake" : ""}`}
+        className={`absolute inset-0 size-full object-contain p-3 ${phase === "exploding" ? "animate-bomb-exit" : ""}`}
         src={bombUnlit}
       />
 
@@ -273,13 +275,12 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
       ) : null}
 
       {phase === "exploding" ? (
-        <div aria-hidden="true" className="absolute inset-0">
-          <div className="animate-explosion-flash absolute left-1/2 top-1/2 size-44 -translate-x-1/2 -translate-y-1/2 rounded-full bg-prize-soft" />
-          <div
-            className="animate-spark-burst absolute left-1/2 top-1/2 size-52 -translate-x-1/2 -translate-y-1/2 bg-[length:500%_200%] bg-no-repeat"
-            style={{ backgroundImage: `url(${sparkSheet})` }}
-          />
-        </div>
+        <img
+          alt=""
+          aria-hidden="true"
+          className="animate-explosion-burst absolute inset-0 size-full object-contain p-4"
+          src={explosionBurst}
+        />
       ) : null}
     </div>
   )
