@@ -663,7 +663,7 @@ El rojo principal se usa como acento y acción, no como relleno dominante. Los b
 
 Las cards estructurales de Premios, Ajustes y demás pantallas usan `surface` (`slate-900`). Los tonos `primary-soft` quedan reservados para selección, alertas, badges y énfasis puntual, no para fondos normales de cards.
 
-Inicio no usa cards estructurales contenedoras en sus estados principales. La bomba, la escena de revelación y el estado vacío se presentan centrados directamente sobre `background` (`slate-950`). En el estado revelado se conserva únicamente el bloque pequeño del nombre del premio, con borde y contraste accesibles.
+Ningún estado de Inicio usa cards estructurales contenedoras, incluidos carga y error. La bomba, la escena de revelación, el estado vacío y los mensajes de estado se presentan centrados directamente sobre `background` (`slate-950`). En el estado revelado se conserva únicamente el bloque pequeño del nombre del premio, con borde y contraste accesibles.
 
 ---
 
