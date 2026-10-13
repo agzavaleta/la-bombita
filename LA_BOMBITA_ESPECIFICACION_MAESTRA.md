@@ -661,7 +661,9 @@ La Bombita usa una interfaz **dark-only**. No existe selector de tema ni variant
 
 El rojo principal se usa como acento y acción, no como relleno dominante. Los botones sólidos `primary` y `destructive` deben usar texto oscuro (`background`) para mantener contraste; los acentos pequeños sobre fondos oscuros pueden usar `primary-accent`. Los focos deben ser claramente visibles y las superficies, inputs y estados deshabilitados deben conservar separación suficiente sin depender solo del color.
 
-Todas las cards estructurales y sus áreas visuales principales, incluida la card de la bomba y la presentación del premio revelado, usan `surface` (`slate-900`). Los tonos `primary-soft` quedan reservados para selección, alertas, badges y énfasis puntual, no para fondos normales de cards.
+Las cards estructurales de Premios, Ajustes y demás pantallas usan `surface` (`slate-900`). Los tonos `primary-soft` quedan reservados para selección, alertas, badges y énfasis puntual, no para fondos normales de cards.
+
+Inicio no usa cards estructurales contenedoras en sus estados principales. La bomba, la escena de revelación y el estado vacío se presentan centrados directamente sobre `background` (`slate-950`). En el estado revelado se conserva únicamente el bloque pequeño del nombre del premio, con borde y contraste accesibles.
 
 ---
 
