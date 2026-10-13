@@ -9,7 +9,10 @@ export type ScratchPoint = {
 }
 
 function isSparkPixel(pixels: Uint8ClampedArray, pixelIndex: number, xRatio: number, yRatio: number): boolean {
-  if (xRatio < 0.68 || xRatio > 0.98 || yRatio > 0.34) {
+  const isInsideSparkBounds = xRatio >= 0.68 && xRatio <= 0.99 && yRatio >= 0.03 && yRatio <= 0.35
+  const isInsideFusePath = xRatio < 0.78 && yRatio > 0.23
+
+  if (!isInsideSparkBounds || isInsideFusePath) {
     return false
   }
 
@@ -18,24 +21,20 @@ function isSparkPixel(pixels: Uint8ClampedArray, pixelIndex: number, xRatio: num
   const blue = pixels[pixelIndex + 2] ?? 0
   const alpha = pixels[pixelIndex + 3] ?? 0
 
-  return alpha >= 32 && red >= 210 && green >= 80 && blue <= 110 && red - blue >= 120
+  return alpha >= 16 && red >= 225 && green >= 80 && blue <= 70 && red - blue >= 155
 }
 
-function collectSparkSampleIndices(canvas: HTMLCanvasElement): number[] {
-  const context = canvas.getContext("2d", { willReadFrequently: true })
-
-  if (!context || canvas.width === 0 || canvas.height === 0) {
-    return []
-  }
-
-  const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data
+function isolateSparkPixels(pixels: Uint8ClampedArray, width: number, height: number): number[] {
   const samples: number[] = []
 
-  for (let y = 0; y < canvas.height; y += PIXEL_SAMPLE_STEP) {
-    for (let x = 0; x < canvas.width; x += PIXEL_SAMPLE_STEP) {
-      const pixelIndex = (y * canvas.width + x) * 4
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const pixelIndex = (y * width + x) * 4
+      const isSpark = isSparkPixel(pixels, pixelIndex, x / width, y / height)
 
-      if (isSparkPixel(pixels, pixelIndex, x / canvas.width, y / canvas.height)) {
+      if (!isSpark) {
+        pixels[pixelIndex + 3] = 0
+      } else if (x % PIXEL_SAMPLE_STEP === 0 && y % PIXEL_SAMPLE_STEP === 0) {
         samples.push(pixelIndex + 3)
       }
     }
@@ -44,7 +43,7 @@ function collectSparkSampleIndices(canvas: HTMLCanvasElement): number[] {
   return samples
 }
 
-export function paintLitBombCanvas(canvas: HTMLCanvasElement, litBombImage: HTMLImageElement): boolean {
+export function paintSparkCanvas(canvas: HTMLCanvasElement, litBombImage: HTMLImageElement): boolean {
   const bounds = canvas.getBoundingClientRect()
 
   if (bounds.width <= 0 || bounds.height <= 0 || !litBombImage.complete || litBombImage.naturalWidth === 0) {
@@ -56,7 +55,7 @@ export function paintLitBombCanvas(canvas: HTMLCanvasElement, litBombImage: HTML
   canvas.width = Math.round(bounds.width * pixelRatio)
   canvas.height = Math.round(bounds.height * pixelRatio)
 
-  const context = canvas.getContext("2d")
+  const context = canvas.getContext("2d", { willReadFrequently: true })
 
   if (!context) {
     return false
@@ -64,7 +63,10 @@ export function paintLitBombCanvas(canvas: HTMLCanvasElement, litBombImage: HTML
 
   context.clearRect(0, 0, canvas.width, canvas.height)
   context.drawImage(litBombImage, inset, inset, canvas.width - inset * 2, canvas.height - inset * 2)
-  sparkSampleIndices.set(canvas, collectSparkSampleIndices(canvas))
+  const sparkLayer = context.getImageData(0, 0, canvas.width, canvas.height)
+  const samples = isolateSparkPixels(sparkLayer.data, canvas.width, canvas.height)
+  context.putImageData(sparkLayer, 0, 0)
+  sparkSampleIndices.set(canvas, samples)
   return true
 }
 

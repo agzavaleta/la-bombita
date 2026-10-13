@@ -7,7 +7,7 @@ import {
   eraseScratchPath,
   getRevealedRatio,
   getScratchPoint,
-  paintLitBombCanvas,
+  paintSparkCanvas,
   type ScratchPoint,
 } from "@/components/scratch/scratch-canvas"
 
@@ -48,7 +48,6 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
   const lastProgressCheck = useRef(0)
   const isRevealPending = useRef(false)
   const explosionTimeout = useRef<number | undefined>(undefined)
-  const [isCanvasReady, setIsCanvasReady] = useState(false)
   const [phase, setPhase] = useState<RevealPhase>("ready")
 
   useEffect(() => {
@@ -61,8 +60,8 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
     let isActive = true
     const litBombImage = new Image()
     const paintBomb = () => {
-      if (isActive && paintLitBombCanvas(canvas, litBombImage)) {
-        setIsCanvasReady(true)
+      if (isActive) {
+        paintSparkCanvas(canvas, litBombImage)
       }
     }
 
@@ -253,19 +252,13 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
   return (
     <div className="relative aspect-square overflow-hidden rounded-2xl bg-brand-subtle" aria-label="Bomba del premio del día">
       <img
-        alt={phase === "exploding" ? "Bomba a punto de revelar el premio" : ""}
-        aria-hidden={phase === "ready"}
+        alt={phase === "exploding" ? "Bomba a punto de revelar el premio" : "Bomba encendida"}
         className={`absolute inset-0 size-full object-contain p-3 ${phase === "exploding" ? "animate-bomb-shake" : ""}`}
         src={bombUnlit}
       />
 
       {phase === "ready" ? (
         <>
-          <img
-            alt="Bomba encendida"
-            className={`absolute inset-0 size-full object-contain p-3 ${isCanvasReady ? "opacity-0" : "opacity-100"}`}
-            src={bombLit}
-          />
           <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 size-full" />
           <div
             aria-label="Chispa raspable de la mecha"
