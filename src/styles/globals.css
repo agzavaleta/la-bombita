@@ -2,19 +2,26 @@
 
 @theme {
   --font-sans: "Inter Variable", sans-serif;
-  --color-app-background: #fcf7f7;
-  --color-surface: #ffffff;
-  --color-brand: #b4535a;
-  --color-brand-active: #98454c;
-  --color-brand-soft: #f5e4e5;
-  --color-brand-subtle: #faf0f1;
-  --color-prize: #d4a74f;
-  --color-prize-soft: #f8ebcf;
-  --color-text-primary: #0f172a;
-  --color-text-secondary: #64748b;
-  --color-border: #e2e8f0;
-  --color-success: #059669;
-  --color-destructive: #e11d48;
+  --color-background: #020617;
+  --color-surface: #0f172a;
+  --color-surface-elevated: #1e293b;
+  --color-primary: #ef4444;
+  --color-primary-hover: #dc2626;
+  --color-primary-pressed: #b91c1c;
+  --color-primary-accent: #f87171;
+  --color-primary-soft: #450a0a;
+  --color-primary-soft-hover: #7f1d1d;
+  --color-primary-border: #991b1b;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-border: #334155;
+  --color-border-subtle: #1e293b;
+  --color-muted: #0f172a;
+  --color-disabled: #334155;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-destructive: #ef4444;
 }
 
 @keyframes bomb-exit {
@@ -93,7 +100,8 @@
   }
 
   html {
-    background: var(--color-app-background);
+    color-scheme: dark;
+    background: var(--color-background);
     font-family: var(--font-sans);
   }
 
@@ -101,7 +109,7 @@
     min-width: 320px;
     min-height: 100dvh;
     margin: 0;
-    background: var(--color-app-background);
+    background: var(--color-background);
     color: var(--color-text-primary);
     font-family: var(--font-sans);
     text-rendering: optimizeLegibility;

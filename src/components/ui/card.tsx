@@ -15,7 +15,7 @@ function CardTitle({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) 
 }
 
 function CardDescription({ className, ...props }: HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-sm text-slate-500", className)} {...props} />
+  return <p className={cn("text-sm text-text-secondary", className)} {...props} />
 }
 
 function CardContent({ className, ...props }: HTMLAttributes<HTMLDivElement>) {

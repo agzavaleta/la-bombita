@@ -1,15 +1,15 @@
 import { cva } from "class-variance-authority"
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-lg text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 rounded-lg text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:bg-disabled disabled:text-text-muted disabled:opacity-70",
   {
     variants: {
       variant: {
-        default: "bg-brand text-white hover:bg-brand-active",
-        secondary: "bg-brand-soft text-brand-active hover:bg-brand-subtle",
-        outline: "border border-border bg-surface text-text-primary hover:bg-brand-subtle",
-        ghost: "text-text-primary hover:bg-brand-soft",
-        destructive: "bg-destructive text-white hover:bg-destructive/90",
+        default: "bg-primary text-background hover:bg-primary-hover active:bg-primary-pressed",
+        secondary: "border border-primary-border bg-primary-soft text-text-primary hover:bg-primary-soft-hover active:bg-primary-pressed",
+        outline: "border border-border bg-surface-elevated text-text-primary hover:bg-muted active:bg-primary-soft",
+        ghost: "text-text-primary hover:bg-surface-elevated active:bg-primary-soft",
+        destructive: "bg-destructive text-background hover:bg-primary-hover active:bg-primary-pressed",
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -14,7 +14,7 @@ export function PrizeCard({ onDelete, onEdit, prize }: PrizeCardProps) {
   return (
     <Card>
       <CardContent className="space-y-4 p-4">
-        <p className="break-words text-base font-bold leading-snug text-slate-900">{prize.name}</p>
+        <p className="break-words text-base font-bold leading-snug text-text-primary">{prize.name}</p>
         <div className="grid grid-cols-2 gap-2">
           <Button type="button" variant="outline" className="h-11" onClick={() => onEdit(prize)}>
             <Pencil aria-hidden="true" className="size-4" />
@@ -23,7 +23,7 @@ export function PrizeCard({ onDelete, onEdit, prize }: PrizeCardProps) {
           <Button
             type="button"
             variant="outline"
-            className="h-11 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            className="h-11 text-primary-accent hover:bg-primary-soft hover:text-primary-accent"
             onClick={() => onDelete(prize)}
           >
             <Trash2 aria-hidden="true" className="size-4" />

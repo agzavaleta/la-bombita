@@ -17,7 +17,7 @@ export function PagePlaceholder({ children, title }: PagePlaceholderProps) {
           <CardTitle>La Bombita</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-slate-500">{children}</p>
+          <p className="text-sm text-text-secondary">{children}</p>
         </CardContent>
       </Card>
     </section>

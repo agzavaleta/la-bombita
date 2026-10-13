@@ -634,23 +634,32 @@ Tulín y la bomba también deben respetar este lenguaje.
 
 ## 14.2 Paleta base aprobada
 
-Centralizar la paleta como tokens reutilizables de Tailwind.
+La Bombita usa una interfaz **dark-only**. No existe selector de tema ni variante clara. Centralizar la paleta como tokens reutilizables de Tailwind.
 
 | Uso | Token | Valor |
 |---|---|---|
-| Fondo general | `app-background` | `#FCF7F7` |
-| Superficies | `surface` | `#FFFFFF` |
-| Principal | `brand` | `#B4535A` |
-| Principal activo | `brand-active` | `#98454C` |
-| Principal suave | `brand-soft` | `#F5E4E5` |
-| Principal muy suave | `brand-subtle` | `#FAF0F1` |
-| Acento premio | `prize` | `#D4A74F` |
-| Acento suave | `prize-soft` | `#F8EBCF` |
-| Texto principal | `text-primary` | `slate-900` |
-| Texto secundario | `text-secondary` | `slate-500` |
-| Bordes | `border` | `slate-200` |
-| Éxito | `success` | `emerald-600` |
-| Error / destructivo | `destructive` | `rose-600` |
+| Fondo general | `background` | `#020617` (`slate-950`) |
+| Superficies | `surface` | `#0F172A` (`slate-900`) |
+| Superficies elevadas | `surface-elevated` | `#1E293B` (`slate-800`) |
+| Principal | `primary` | `#EF4444` (`red-500`) |
+| Principal hover | `primary-hover` | `#DC2626` (`red-600`) |
+| Principal presionado | `primary-pressed` | `#B91C1C` (`red-700`) |
+| Acento principal sobre fondos oscuros | `primary-accent` | `#F87171` (`red-400`) |
+| Principal suave | `primary-soft` | `#450A0A` (`red-950`) |
+| Principal suave hover | `primary-soft-hover` | `#7F1D1D` (`red-900`) |
+| Borde principal | `primary-border` | `#991B1B` (`red-800`) |
+| Texto principal | `text-primary` | `#F8FAFC` (`slate-50`) |
+| Texto secundario | `text-secondary` | `#CBD5E1` (`slate-300`) |
+| Texto atenuado | `text-muted` | `#94A3B8` (`slate-400`) |
+| Bordes | `border` | `#334155` (`slate-700`) |
+| Bordes sutiles | `border-subtle` | `#1E293B` (`slate-800`) |
+| Fondo atenuado | `muted` | `#0F172A` (`slate-900`) |
+| Estado deshabilitado | `disabled` | `#334155` (`slate-700`) |
+| Éxito | `success` | `#22C55E` (`green-500`) |
+| Advertencia | `warning` | `#F59E0B` (`amber-500`) |
+| Error / destructivo | `destructive` | `#EF4444` (`red-500`) |
+
+El rojo principal se usa como acento y acción, no como relleno dominante. Los botones sólidos `primary` y `destructive` deben usar texto oscuro (`background`) para mantener contraste; los acentos pequeños sobre fondos oscuros pueden usar `primary-accent`. Los focos deben ser claramente visibles y las superficies, inputs y estados deshabilitados deben conservar separación suficiente sin depender solo del color.
 
 ---
 

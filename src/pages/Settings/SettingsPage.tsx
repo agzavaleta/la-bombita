@@ -175,7 +175,7 @@ export function SettingsPage({ onOpenTulinStory }: SettingsPageProps) {
         </CardHeader>
         <CardContent>
           <Separator className="mb-4" />
-          <p className="text-sm font-bold text-slate-500">Versión {APP_VERSION}</p>
+          <p className="text-sm font-bold text-text-secondary">Versión {APP_VERSION}</p>
         </CardContent>
       </Card>
 

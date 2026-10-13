@@ -36,8 +36,8 @@ export function BottomNavigation({ activeSection, onSectionChange }: BottomNavig
                 type="button"
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "flex min-h-16 w-full flex-col items-center justify-center gap-1 px-2 text-xs font-bold transition-colors",
-                  isActive ? "bg-brand-soft text-brand-active" : "text-text-secondary hover:text-brand",
+                  "flex min-h-16 w-full flex-col items-center justify-center gap-1 px-2 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary",
+                  isActive ? "bg-primary-soft text-primary-accent" : "text-text-muted hover:text-text-secondary",
                 )}
                 onClick={() => onSectionChange(section)}
               >

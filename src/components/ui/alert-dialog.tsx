@@ -12,7 +12,7 @@ function AlertDialogPortal(props: ComponentProps<typeof AlertDialogPrimitive.Por
 }
 
 function AlertDialogOverlay({ className, ...props }: ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
-  return <AlertDialogPrimitive.Overlay className={cn("fixed inset-0 z-50 bg-slate-900/50", className)} {...props} />
+  return <AlertDialogPrimitive.Overlay className={cn("fixed inset-0 z-50 bg-background/80", className)} {...props} />
 }
 
 function AlertDialogContent({ className, ...props }: ComponentProps<typeof AlertDialogPrimitive.Content>) {
@@ -21,7 +21,7 @@ function AlertDialogContent({ className, ...props }: ComponentProps<typeof Alert
       <AlertDialogOverlay />
       <AlertDialogPrimitive.Content
         className={cn(
-          "fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border bg-surface p-6",
+          "fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border bg-surface-elevated p-6 text-text-primary",
           className,
         )}
         {...props}
@@ -43,7 +43,7 @@ function AlertDialogTitle({ className, ...props }: ComponentProps<typeof AlertDi
 }
 
 function AlertDialogDescription({ className, ...props }: ComponentProps<typeof AlertDialogPrimitive.Description>) {
-  return <AlertDialogPrimitive.Description className={cn("text-sm text-slate-500", className)} {...props} />
+  return <AlertDialogPrimitive.Description className={cn("text-sm text-text-secondary", className)} {...props} />
 }
 
 function AlertDialogAction({ className, ...props }: ComponentProps<typeof AlertDialogPrimitive.Action>) {

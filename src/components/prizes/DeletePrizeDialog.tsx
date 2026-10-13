@@ -44,13 +44,13 @@ export function DeletePrizeDialog({ onCancel, onDelete, prize }: DeletePrizeDial
             Este premio dejará de estar disponible para futuros sorteos.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <p className="mt-4 break-words rounded-lg bg-brand-subtle p-3 text-sm font-bold text-text-primary">{prize.name}</p>
+        <p className="mt-4 break-words rounded-lg border border-primary-border bg-primary-soft p-3 text-sm font-bold text-text-primary">{prize.name}</p>
         <AlertDialogFooter>
           <AlertDialogCancel className="h-11" disabled={isDeleting}>
             Cancelar
           </AlertDialogCancel>
           <AlertDialogAction
-            className="h-11 bg-destructive hover:bg-destructive/90"
+            className="h-11"
             disabled={isDeleting}
             onClick={(event) => {
               event.preventDefault()

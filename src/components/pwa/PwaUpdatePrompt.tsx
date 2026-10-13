@@ -33,7 +33,7 @@ export function PwaUpdatePrompt() {
   return (
     <aside
       aria-live="polite"
-      className="fixed inset-x-4 bottom-[calc(5.5rem+env(safe-area-inset-bottom))] z-40 mx-auto max-w-[calc(28rem-2rem)] rounded-2xl border border-border bg-surface p-4"
+      className="fixed inset-x-4 bottom-[calc(5.5rem+env(safe-area-inset-bottom))] z-40 mx-auto max-w-[calc(28rem-2rem)] rounded-2xl border border-primary-border bg-surface-elevated p-4"
       role="status"
     >
       <p className="text-sm font-semibold text-text-primary">Hay una nueva versión de La Bombita disponible.</p>

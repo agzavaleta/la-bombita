@@ -18,7 +18,7 @@ export function TulinStoryPage({ onBack }: TulinStoryPageProps) {
         Historia de Tulín Bombín
       </h1>
       <Card>
-        <CardContent className="p-6 text-sm text-slate-500">Contenido pendiente.</CardContent>
+        <CardContent className="p-6 text-sm text-text-secondary">Contenido pendiente.</CardContent>
       </Card>
     </section>
   )

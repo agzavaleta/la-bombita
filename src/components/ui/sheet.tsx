@@ -10,7 +10,7 @@ const SheetClose = DialogPrimitive.Close
 const SheetPortal = DialogPrimitive.Portal
 
 function SheetOverlay({ className, ...props }: ComponentProps<typeof DialogPrimitive.Overlay>) {
-  return <DialogPrimitive.Overlay className={cn("fixed inset-0 z-50 bg-slate-900/50", className)} {...props} />
+  return <DialogPrimitive.Overlay className={cn("fixed inset-0 z-50 bg-background/80", className)} {...props} />
 }
 
 function SheetContent({ className, children, ...props }: ComponentProps<typeof DialogPrimitive.Content>) {
@@ -18,11 +18,11 @@ function SheetContent({ className, children, ...props }: ComponentProps<typeof D
     <SheetPortal>
       <SheetOverlay />
       <DialogPrimitive.Content
-        className={cn("fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border border-border bg-surface p-6", className)}
+        className={cn("fixed inset-x-0 bottom-0 z-50 rounded-t-2xl border border-border bg-surface-elevated p-6 text-text-primary", className)}
         {...props}
       >
         {children}
-        <DialogPrimitive.Close className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-lg text-text-secondary hover:bg-brand-soft hover:text-brand-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand">
+        <DialogPrimitive.Close className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-lg text-text-secondary hover:bg-primary-soft hover:text-primary-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background">
           <X className="size-5" />
           <span className="sr-only">Cerrar</span>
         </DialogPrimitive.Close>
@@ -40,11 +40,11 @@ function SheetFooter({ className, ...props }: ComponentProps<"div">) {
 }
 
 function SheetTitle({ className, ...props }: ComponentProps<typeof DialogPrimitive.Title>) {
-  return <DialogPrimitive.Title className={cn("text-lg font-extrabold text-slate-900", className)} {...props} />
+  return <DialogPrimitive.Title className={cn("text-lg font-extrabold text-text-primary", className)} {...props} />
 }
 
 function SheetDescription({ className, ...props }: ComponentProps<typeof DialogPrimitive.Description>) {
-  return <DialogPrimitive.Description className={cn("text-sm text-slate-500", className)} {...props} />
+  return <DialogPrimitive.Description className={cn("text-sm text-text-secondary", className)} {...props} />
 }
 
 export { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger }

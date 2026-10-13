@@ -44,7 +44,7 @@ export function PrizesPage({ openCreateOnMount = false }: PrizesPageProps) {
           Mis premios
         </h1>
         {!isLoading && !loadError ? (
-          <p className="text-sm font-semibold text-slate-500" aria-live="polite">
+          <p className="text-sm font-semibold text-text-secondary" aria-live="polite">
             {prizeCountLabel}
           </p>
         ) : null}
@@ -59,7 +59,7 @@ export function PrizesPage({ openCreateOnMount = false }: PrizesPageProps) {
 
       {isLoading ? (
         <Card aria-live="polite">
-          <CardContent className="p-6 text-center text-sm text-slate-500">Cargando premios…</CardContent>
+          <CardContent className="p-6 text-center text-sm text-text-secondary">Cargando premios…</CardContent>
         </Card>
       ) : loadError ? (
         <LoadErrorState message="No se pudieron cargar los premios." />

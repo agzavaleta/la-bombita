@@ -56,7 +56,7 @@ export function HomePage({ onAddFirstPrize }: HomePageProps) {
           Inicio
         </h1>
         <Card aria-live="polite">
-          <CardContent className="p-6 text-center text-sm text-slate-500">Cargando…</CardContent>
+          <CardContent className="p-6 text-center text-sm text-text-secondary">Cargando…</CardContent>
         </Card>
       </section>
     )
@@ -96,7 +96,7 @@ export function HomePage({ onAddFirstPrize }: HomePageProps) {
             <div className="animate-tulin-reveal">
               <PrizeRevealScene prizeName={dailyPrize.prizeNameSnapshot} />
             </div>
-            <p className="text-center text-sm font-bold text-slate-500">Nuevo premio disponible mañana</p>
+            <p className="text-center text-sm font-bold text-text-secondary">Nuevo premio disponible mañana</p>
           </CardContent>
         </Card>
       ) : (
@@ -107,7 +107,7 @@ export function HomePage({ onAddFirstPrize }: HomePageProps) {
               onReveal={completeReveal}
               onSequenceComplete={() => setIsRevealSequenceActive(false)}
             />
-            <p className="text-center text-sm text-slate-500">Raspa la chispa para descubrir tu premio.</p>
+            <p className="text-center text-sm text-text-secondary">Raspa la chispa para descubrir tu premio.</p>
           </CardContent>
         </Card>
       )}
