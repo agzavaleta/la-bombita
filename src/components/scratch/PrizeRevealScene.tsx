@@ -7,7 +7,7 @@ type PrizeRevealSceneProps = {
 export function PrizeRevealScene({ prizeName }: PrizeRevealSceneProps) {
   return (
     <div className="relative flex min-h-80 flex-col items-center justify-end px-4 pb-5 pt-3">
-      <span aria-hidden="true" className="home-soft-glow home-soft-glow--reveal" />
+      <span aria-hidden="true" className="soft-glow soft-glow--brand soft-glow--reveal" />
       <img
         alt="Tulín mostrando el premio del día"
         className="relative min-h-0 w-full max-w-80 flex-1 object-contain"

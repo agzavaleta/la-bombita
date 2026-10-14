@@ -74,6 +74,21 @@
   }
 }
 
+@keyframes celebration-soft-glow {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.75);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
 .animate-bomb-exit {
   animation: bomb-exit 140ms ease-in forwards;
 }
@@ -86,32 +101,61 @@
   animation: tulin-reveal 360ms ease-out both;
 }
 
-.home-soft-glow {
+.soft-glow {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: clamp(13.75rem, 72vw, 17.5rem);
   aspect-ratio: 1;
   pointer-events: none;
   border-radius: 9999px;
+  transform: translate(-50%, -50%);
+}
+
+.soft-glow--brand {
+  width: clamp(13.75rem, 72vw, 17.5rem);
   background: radial-gradient(
     circle,
     rgb(239 68 68 / 16%) 0%,
     rgb(239 68 68 / 7%) 35%,
     transparent 70%
   );
-  transform: translate(-50%, -50%);
 }
 
-.home-soft-glow--reveal {
+.soft-glow--reveal {
   top: 42%;
+}
+
+.soft-glow--small {
+  width: clamp(8.75rem, 45vw, 11.25rem);
+  background: radial-gradient(
+    circle,
+    rgb(239 68 68 / 12%) 0%,
+    rgb(239 68 68 / 5%) 35%,
+    transparent 70%
+  );
+}
+
+.soft-glow--celebration {
+  width: clamp(15rem, 82vw, 20rem);
+  background: radial-gradient(
+    circle,
+    rgb(245 158 11 / 24%) 0%,
+    rgb(239 68 68 / 10%) 42%,
+    transparent 70%
+  );
+  animation: celebration-soft-glow 320ms ease-out 100ms both;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-bomb-exit,
   .animate-explosion-burst,
-  .animate-tulin-reveal {
+  .animate-tulin-reveal,
+  .soft-glow--celebration {
     animation-duration: 1ms;
+  }
+
+  .soft-glow--celebration {
+    animation-delay: 0ms;
   }
 }
 

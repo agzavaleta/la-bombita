@@ -253,7 +253,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
 
   return (
     <div className="relative aspect-square overflow-hidden rounded-2xl" aria-label="Bomba del premio del día">
-      <span aria-hidden="true" className="home-soft-glow" />
+      <span aria-hidden="true" className="soft-glow soft-glow--brand" />
       <img
         alt={phase === "exploding" ? "Bomba a punto de revelar el premio" : "Bomba encendida"}
         className={`absolute inset-0 size-full object-contain p-3 ${phase === "exploding" ? "animate-bomb-exit" : ""}`}
@@ -276,12 +276,15 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
       ) : null}
 
       {phase === "exploding" ? (
-        <img
-          alt=""
-          aria-hidden="true"
-          className="animate-explosion-burst absolute inset-0 size-full object-contain p-4"
-          src={explosionBurst}
-        />
+        <>
+          <span aria-hidden="true" className="soft-glow soft-glow--celebration" />
+          <img
+            alt=""
+            aria-hidden="true"
+            className="animate-explosion-burst absolute inset-0 size-full object-contain p-4"
+            src={explosionBurst}
+          />
+        </>
       ) : null}
     </div>
   )

@@ -11,7 +11,7 @@ export function HomeEmptyState({ onAddFirstPrize }: HomeEmptyStateProps) {
   return (
     <div className="flex w-full max-w-sm flex-col items-center px-6 py-9 text-center">
       <div className="relative flex h-48 w-48 items-center justify-center">
-        <span aria-hidden="true" className="home-soft-glow" />
+        <span aria-hidden="true" className="soft-glow soft-glow--brand" />
         <img alt="Tulín Bombín" className="relative size-full object-contain" src={tulinEmptyState} />
       </div>
       <h2 className="mt-6 text-xl font-extrabold">Aún no tienes premios</h2>

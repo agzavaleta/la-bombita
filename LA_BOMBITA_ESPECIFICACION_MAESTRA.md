@@ -612,6 +612,8 @@ Se accede desde:
 
 El contenido narrativo y las ilustraciones definitivas pueden completarse después sin bloquear el desarrollo estructural.
 
+Mientras la pantalla muestre únicamente **Contenido pendiente.**, no se agrega decoración adicional. Cuando exista una ilustración protagonista de Tulín, debe usar el soft glow base de marca detrás de ella.
+
 ---
 
 # 14. Lenguaje visual
@@ -668,7 +670,11 @@ Las cards de premios creados y las cards estructurales de Ajustes y demás panta
 
 Ningún estado de Inicio usa cards estructurales contenedoras, incluidos carga y error. La bomba, la escena de revelación, el estado vacío y los mensajes de estado se presentan centrados directamente sobre `background` (`slate-950`). En el estado revelado se conserva únicamente el bloque pequeño del nombre del premio, con borde y contraste accesibles.
 
-Inicio usa un soft glow ambiental rojo muy sutil detrás del elemento protagonista: Tulín en el estado vacío, la bomba disponible para raspar y Tulín con el premio revelado. Es un radial gradient decorativo, estático, sin bordes ni interacción, y no constituye una card o superficie contenedora.
+El soft glow es un recurso de marca reservado a elementos protagonistas. Siempre es decorativo, sin bordes ni superficie, usa `pointer-events: none`, queda oculto para tecnologías de asistencia y no debe provocar overflow. No se aplica a textos, botones, navegación, cards normales, Ajustes, sheets, inputs, toasts ni iconos comunes.
+
+- **Base de marca:** rojo `red-500`, tamaño responsive de 220–280 px, 16% al centro, 7% al 35% y transparente al 70%. Se usa detrás de Tulín en el estado vacío de Inicio, la bomba raspable y Tulín con el premio revelado. Es estático.
+- **Estado vacío de Premios:** rojo `red-500`, tamaño responsive de 140–180 px, 12% al centro, 5% al 35% y transparente al 70%. Se centra detrás del icono de regalo y es estático.
+- **Celebración:** tamaño responsive de 240–320 px, mezcla radial de `amber-500` al 24% en el centro y `red-500` al 10%, desvaneciéndose hasta transparente al 70%. Aparece detrás de la explosión durante 320 ms y respeta `prefers-reduced-motion`, sin modificar los tiempos funcionales de revelación.
 
 ---
 
