@@ -11,12 +11,15 @@ import {
   paintSparkCanvas,
   type ScratchPoint,
 } from "@/components/scratch/scratch-canvas"
+import { playExplosionSound, playPrizeRevealSound, unlockAudio } from "@/lib/audio/sound-effects"
 
 const REVEAL_THRESHOLD = 0.85
 const GESTURE_START_DISTANCE = 6
 const PROGRESS_CHECK_INTERVAL = 80
 const EXPLOSION_DURATION = 1350
 const REDUCED_MOTION_EXPLOSION_DURATION = 390
+const EXPLOSION_SOUND_DELAY = 180
+const REDUCED_MOTION_EXPLOSION_SOUND_DELAY = 10
 
 type RevealPhase = "ready" | "exploding"
 
@@ -33,6 +36,7 @@ type ScratchCardProps = {
   onScratchStart: () => Promise<boolean>
   onReveal: () => Promise<boolean>
   onSequenceComplete: () => void
+  soundEnabled: boolean
 }
 
 function waitForNextFrame(): Promise<void> {
@@ -49,7 +53,13 @@ function getExplosionDuration(): number {
     : EXPLOSION_DURATION
 }
 
-export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: ScratchCardProps) {
+function getExplosionSoundDelay(): number {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? REDUCED_MOTION_EXPLOSION_SOUND_DELAY
+    : EXPLOSION_SOUND_DELAY
+}
+
+export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete, soundEnabled }: ScratchCardProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const scratchSession = useRef<ScratchSession | undefined>(undefined)
@@ -57,6 +67,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
   const lastProgressCheck = useRef(0)
   const isRevealPending = useRef(false)
   const explosionTimeout = useRef<number | undefined>(undefined)
+  const explosionSoundTimeout = useRef<number | undefined>(undefined)
   const [explosionOrigin, setExplosionOrigin] = useState<ExplosionOrigin>()
   const [phase, setPhase] = useState<RevealPhase>("ready")
 
@@ -98,6 +109,10 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
     () => () => {
       if (explosionTimeout.current !== undefined) {
         window.clearTimeout(explosionTimeout.current)
+      }
+
+      if (explosionSoundTimeout.current !== undefined) {
+        window.clearTimeout(explosionSoundTimeout.current)
       }
     },
     [],
@@ -152,13 +167,22 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
       }
 
       setPhase("exploding")
+
+      if (soundEnabled) {
+        explosionSoundTimeout.current = window.setTimeout(playExplosionSound, getExplosionSoundDelay())
+      }
+
       explosionTimeout.current = window.setTimeout(() => {
+        if (soundEnabled) {
+          playPrizeRevealSound()
+        }
+
         onSequenceComplete()
       }, getExplosionDuration())
     } catch {
       isRevealPending.current = false
     }
-  }, [onReveal, onSequenceComplete])
+  }, [onReveal, onSequenceComplete, soundEnabled])
 
   const prepareScratch = useCallback(
     async (session: ScratchSession) => {
@@ -198,6 +222,10 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
 
     if (!point || phase !== "ready") {
       return
+    }
+
+    if (soundEnabled) {
+      unlockAudio()
     }
 
     event.currentTarget.setPointerCapture(event.pointerId)

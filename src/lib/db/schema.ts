@@ -4,10 +4,17 @@ import { APP_STATE_KEYS, INDEX_NAMES, STORE_NAMES } from "@/lib/db/constants"
 import type { DailyPrize } from "@/types/daily-prize"
 import type { Prize } from "@/types/prize"
 
-export type AppStateRecord = {
-  key: (typeof APP_STATE_KEYS)[keyof typeof APP_STATE_KEYS]
+type DailyPrizeStateRecord = {
+  key: typeof APP_STATE_KEYS.currentDailyPrize
   value: DailyPrize
 }
+
+type SoundPreferenceStateRecord = {
+  key: typeof APP_STATE_KEYS.soundEnabled
+  value: boolean
+}
+
+export type AppStateRecord = DailyPrizeStateRecord | SoundPreferenceStateRecord
 
 export interface LaBombitaDatabase extends DBSchema {
   [STORE_NAMES.prizes]: {

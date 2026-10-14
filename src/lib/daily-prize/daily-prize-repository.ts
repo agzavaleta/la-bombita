@@ -7,7 +7,7 @@ export async function getCurrentDailyPrize(): Promise<DailyPrize | null> {
   const database = await getDatabase()
   const record = await database.get(STORE_NAMES.appState, APP_STATE_KEYS.currentDailyPrize)
 
-  return record?.value ?? null
+  return record?.key === APP_STATE_KEYS.currentDailyPrize ? record.value : null
 }
 
 export async function saveCurrentDailyPrize(dailyPrize: DailyPrize): Promise<void> {

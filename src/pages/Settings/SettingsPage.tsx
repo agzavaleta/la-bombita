@@ -7,6 +7,7 @@ import { PrizeImportSheet } from "@/components/settings/PrizeImportSheet"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
 import { BACKUP_FILE_NAME } from "@/lib/backup/backup-constants"
 import { BACKUP_ERROR_CODES, BackupValidationError } from "@/lib/backup/backup-errors"
 import {
@@ -18,7 +19,10 @@ import {
 import { APP_VERSION } from "@/lib/version/app-version"
 
 type SettingsPageProps = {
+  isSoundPreferenceLoading: boolean
   onOpenTulinStory: () => void
+  onSoundEnabledChange: (soundEnabled: boolean) => Promise<void>
+  soundEnabled: boolean
 }
 
 type PendingImport = {
@@ -57,11 +61,29 @@ function downloadJsonFile(contents: string): void {
   window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 0)
 }
 
-export function SettingsPage({ onOpenTulinStory }: SettingsPageProps) {
+export function SettingsPage({
+  isSoundPreferenceLoading,
+  onOpenTulinStory,
+  onSoundEnabledChange,
+  soundEnabled,
+}: SettingsPageProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [pendingImport, setPendingImport] = useState<PendingImport>()
   const [isExporting, setIsExporting] = useState(false)
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
+  const [isSavingSoundPreference, setIsSavingSoundPreference] = useState(false)
+
+  async function handleSoundEnabledChange(nextSoundEnabled: boolean) {
+    setIsSavingSoundPreference(true)
+
+    try {
+      await onSoundEnabledChange(nextSoundEnabled)
+    } catch {
+      toast.error("No se pudo guardar la preferencia de sonidos.")
+    } finally {
+      setIsSavingSoundPreference(false)
+    }
+  }
 
   async function handleExport() {
     setIsExporting(true)
@@ -102,6 +124,29 @@ export function SettingsPage({ onOpenTulinStory }: SettingsPageProps) {
       <h1 id="settings-title" className="text-3xl font-extrabold tracking-tight">
         Ajustes
       </h1>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Sonidos</CardTitle>
+          <CardDescription id="sound-preference-description">
+            Reproduce efectos al descubrir el premio.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex items-center justify-between gap-4">
+          <span className="text-sm font-bold text-text-primary">
+            {soundEnabled ? "Activado" : "Desactivado"}
+          </span>
+          <Switch
+            aria-label="Sonidos"
+            aria-describedby="sound-preference-description"
+            checked={soundEnabled}
+            disabled={isSoundPreferenceLoading || isSavingSoundPreference}
+            onCheckedChange={(nextSoundEnabled) => {
+              void handleSoundEnabledChange(nextSoundEnabled)
+            }}
+          />
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

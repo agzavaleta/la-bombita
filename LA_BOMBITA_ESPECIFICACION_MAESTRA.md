@@ -179,6 +179,7 @@ Usar IndexedDB para guardar al menos:
 - identificadores internos;
 - premio actual del día;
 - fecha asociada al premio actual;
+- preferencia de sonidos (`sound-enabled`), activada por defecto;
 - información mínima necesaria para restaurar correctamente el estado de la app.
 
 El premio del día debe guardar una copia del nombre que tenía al momento de salir.
@@ -329,6 +330,15 @@ Al revelar el premio:
 - todos los efectos se disipan antes de que aparezca Tulín en la pose `tulin-prize-reveal.png` junto al premio.
 
 La secuencia visual dura aproximadamente 1350 ms e incluye una pausa final limpia de unos 160 ms antes de mostrar a Tulín. El burst permanece visible durante 680 ms y las partículas comienzan por grupos desde unos 220 ms para finalizar cerca de 1190 ms. El overlay fullscreen es decorativo, usa `pointer-events: none`, no bloquea interacción ni altera la selección, persistencia o revelación del premio. El centro se calcula una sola vez desde `getBoundingClientRect()` del contenedor de la bomba al iniciar la explosión. Con `prefers-reduced-motion` la secuencia dura 390 ms: se omiten vibraciones, golpe de pantalla, ondas y desplazamientos de partículas, pero se mantienen un flash cálido fullscreen claramente visible y el burst principal grande con un fade breve antes de mostrar a Tulín.
+
+La celebración incluye dos efectos sintetizados con Web Audio API, sin archivos, servicios externos ni librerías de audio:
+
+- un `POP / BOOM` cartoon moderado, generado con un golpe grave, un pop agudo y ruido filtrado breve, comienza junto al impacto visual a los 180 ms y dura aproximadamente 400 ms;
+- un ding positivo de dos notas comienza al aparecer Tulín, a los 1350 ms, y dura aproximadamente 540 ms.
+
+En `prefers-reduced-motion`, el boom comienza junto al impacto reducido a los 10 ms y el ding coincide con la aparición de Tulín a los 390 ms. El audio no depende de la animación para comunicar información y no se desactiva por la preferencia de movimiento reducido.
+
+Safari/iOS requiere desbloquear Web Audio desde una interacción explícita. El primer `pointerdown` válido sobre la chispa crea o recupera un único `AudioContext` y ejecuta `resume()` si está suspendido, sin reproducir sonido ni seleccionar el premio. Un tap aislado continúa sin iniciar el sorteo: la selección ocurre únicamente después del gesto real de unos 6 px. No hay sonido de raspado en esta etapa.
 
 No sobrecargar la experiencia ni usar humo, fuego, realismo, flashes repetitivos o pantalla blanca sólida.
 
@@ -518,7 +528,15 @@ La versión no debe duplicarse manualmente en varios archivos.
 
 Debe existir una fuente única de versión, idealmente `package.json`, y la interfaz debe leer ese valor.
 
-## 11.4 Herramienta temporal de desarrollo
+## 11.4 Sonidos
+
+Ajustes muestra una preferencia **Sonidos** con la descripción **Reproduce efectos al descubrir el premio.** y un switch accesible **Activado / Desactivado**.
+
+La preferencia está activada por defecto y se persiste en el store `app-state` de IndexedDB con la clave `sound-enabled`, sin crear otra base ni modificar el esquema. Al desactivarla no se inicializa Web Audio ni se reproducen el boom o el ding, pero la secuencia visual permanece idéntica. El cambio tiene efecto inmediato y no reproduce sonido de prueba.
+
+Los efectos son complementarios: el premio y todos los estados continúan comunicándose visualmente. Los fallos o la ausencia de Web Audio no bloquean el flujo ni generan mensajes de error para el usuario.
+
+## 11.5 Herramienta temporal de desarrollo
 
 Mientras la app permanece en desarrollo, Ajustes muestra una sección claramente identificada como **Herramientas de desarrollo** con la acción **Reiniciar premio del día**.
 
@@ -939,7 +957,6 @@ La versión 1.0.0 estará lista cuando:
 - Icono final de PWA.
 - Contenido narrativo definitivo de la historia de Tulín.
 - Sonido final de raspado.
-- Sonido final de revelado.
 - Ajustes finos de animación.
 
 ---

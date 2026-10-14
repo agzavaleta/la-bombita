@@ -8,12 +8,13 @@ import { useDailyPrize } from "@/hooks/use-daily-prize"
 
 type HomePageProps = {
   onAddFirstPrize: () => void
+  soundEnabled: boolean
 }
 
 const centeredHomeSectionClassName =
   "flex min-h-[calc(100dvh-max(2rem,env(safe-area-inset-top))-7rem-env(safe-area-inset-bottom))] flex-col items-center justify-center gap-6 text-center"
 
-export function HomePage({ onAddFirstPrize }: HomePageProps) {
+export function HomePage({ onAddFirstPrize, soundEnabled }: HomePageProps) {
   const { beginScratch, dailyPrize, isLoading, loadError, prizes, revealPrize } = useDailyPrize()
   const [isRevealSequenceActive, setIsRevealSequenceActive] = useState(false)
 
@@ -104,6 +105,7 @@ export function HomePage({ onAddFirstPrize }: HomePageProps) {
             onScratchStart={startScratch}
             onReveal={completeReveal}
             onSequenceComplete={() => setIsRevealSequenceActive(false)}
+            soundEnabled={soundEnabled}
           />
           <p className="text-sm text-text-secondary">Raspa la chispa para descubrir tu premio.</p>
         </div>

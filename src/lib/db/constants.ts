@@ -12,4 +12,5 @@ export const INDEX_NAMES = {
 
 export const APP_STATE_KEYS = {
   currentDailyPrize: "current-daily-prize",
+  soundEnabled: "sound-enabled",
 } as const
