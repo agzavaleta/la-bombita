@@ -204,6 +204,7 @@ Debe contemplar tres estados:
 Cuando no existen premios:
 
 - No mostrar la bomba raspable.
+- No mostrar un título de pantalla visible; la región conserva el nombre accesible **Inicio**.
 - Mostrar a Tulín Bombín solo y centrado usando `tulin-empty-state.png`.
 - Mostrar mensaje simple.
 - Mostrar un único CTA.

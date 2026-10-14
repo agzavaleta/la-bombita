@@ -79,10 +79,7 @@ export function HomePage({ onAddFirstPrize }: HomePageProps) {
 
   if (!dailyPrize && prizes.length === 0) {
     return (
-      <section aria-labelledby="home-title" className={centeredHomeSectionClassName}>
-        <h1 id="home-title" className="text-3xl font-extrabold tracking-tight">
-          Inicio
-        </h1>
+      <section aria-label="Inicio" className={centeredHomeSectionClassName}>
         <HomeEmptyState onAddFirstPrize={onAddFirstPrize} />
       </section>
     )
