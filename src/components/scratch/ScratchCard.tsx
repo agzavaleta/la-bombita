@@ -252,7 +252,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
   }
 
   return (
-    <div className="relative aspect-square overflow-hidden rounded-2xl" aria-label="Bomba del premio del día">
+    <div className="relative aspect-square overflow-visible rounded-2xl" aria-label="Bomba del premio del día">
       <span aria-hidden="true" className="soft-glow soft-glow--brand" />
       <img
         alt={phase === "exploding" ? "Bomba a punto de revelar el premio" : "Bomba encendida"}
@@ -262,10 +262,14 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
 
       {phase === "ready" ? (
         <>
-          <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 size-full" />
+          <canvas
+            ref={canvasRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-[7%] -top-[7%] h-[107%] w-[107%]"
+          />
           <div
             aria-label="Chispa raspable de la mecha"
-            className="absolute right-0 top-0 size-[34%] touch-none cursor-crosshair"
+            className="absolute -right-[7%] -top-[7%] h-[48%] w-[45%] touch-none cursor-crosshair"
             onPointerCancel={finishPointer}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}

@@ -1,4 +1,5 @@
 const BRUSH_SIZE = 30
+const CANVAS_OVERFLOW_RATIO = 0.07
 const DRAWING_INSET = 12
 const PIXEL_SAMPLE_STEP = 4
 // The lit and unlit assets have different fuse geometry; align the isolated spark with the unlit fuse tip.
@@ -27,11 +28,23 @@ function isSparkPixel(pixels: Uint8ClampedArray, pixelIndex: number, xRatio: num
   return alpha >= 16 && red >= 225 && green >= 80 && blue <= 70 && red - blue >= 155
 }
 
-function isolateSparkPixels(pixels: Uint8ClampedArray, width: number, height: number): void {
+function isolateSparkPixels(
+  pixels: Uint8ClampedArray,
+  width: number,
+  height: number,
+  baseWidth: number,
+  baseHeight: number,
+  baseOffsetY: number,
+): void {
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       const pixelIndex = (y * width + x) * 4
-      const isSpark = isSparkPixel(pixels, pixelIndex, x / width, y / height)
+      const isSpark = isSparkPixel(
+        pixels,
+        pixelIndex,
+        x / baseWidth,
+        (y - baseOffsetY) / baseHeight,
+      )
 
       if (!isSpark) {
         pixels[pixelIndex + 3] = 0
@@ -65,6 +78,9 @@ export function paintSparkCanvas(canvas: HTMLCanvasElement, litBombImage: HTMLIm
 
   const pixelRatio = Math.min(window.devicePixelRatio || 1, 2)
   const inset = DRAWING_INSET * pixelRatio
+  const baseWidth = (bounds.width / (1 + CANVAS_OVERFLOW_RATIO)) * pixelRatio
+  const baseHeight = (bounds.height / (1 + CANVAS_OVERFLOW_RATIO)) * pixelRatio
+  const baseOffsetY = baseHeight * CANVAS_OVERFLOW_RATIO
   canvas.width = Math.round(bounds.width * pixelRatio)
   canvas.height = Math.round(bounds.height * pixelRatio)
 
@@ -75,12 +91,25 @@ export function paintSparkCanvas(canvas: HTMLCanvasElement, litBombImage: HTMLIm
   }
 
   context.clearRect(0, 0, canvas.width, canvas.height)
-  context.drawImage(litBombImage, inset, inset, canvas.width - inset * 2, canvas.height - inset * 2)
+  context.drawImage(
+    litBombImage,
+    inset,
+    baseOffsetY + inset,
+    baseWidth - inset * 2,
+    baseHeight - inset * 2,
+  )
   const sparkLayer = context.getImageData(0, 0, canvas.width, canvas.height)
-  isolateSparkPixels(sparkLayer.data, canvas.width, canvas.height)
+  isolateSparkPixels(
+    sparkLayer.data,
+    canvas.width,
+    canvas.height,
+    baseWidth,
+    baseHeight,
+    baseOffsetY,
+  )
 
-  const offsetX = Math.round(canvas.width * SPARK_OFFSET_X_RATIO)
-  const offsetY = Math.round(canvas.height * SPARK_OFFSET_Y_RATIO)
+  const offsetX = Math.round(baseWidth * SPARK_OFFSET_X_RATIO)
+  const offsetY = Math.round(baseHeight * SPARK_OFFSET_Y_RATIO)
   context.clearRect(0, 0, canvas.width, canvas.height)
   context.putImageData(sparkLayer, offsetX, offsetY)
 
