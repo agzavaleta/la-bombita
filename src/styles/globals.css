@@ -53,17 +53,21 @@
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.35);
   }
-  22% {
+  19% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.15);
   }
-  45% {
+  43% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1.04);
   }
-  70% {
+  65% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.035);
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  80% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.065);
   }
   100% {
     opacity: 0;
@@ -76,11 +80,14 @@
   100% {
     opacity: 0;
   }
-  22% {
+  18% {
     opacity: 1;
   }
-  48% {
-    opacity: 0.78;
+  43% {
+    opacity: 0.92;
+  }
+  72% {
+    opacity: 0.42;
   }
 }
 
@@ -89,10 +96,10 @@
   100% {
     opacity: 0;
   }
-  30% {
+  28% {
     opacity: 1;
   }
-  68% {
+  66% {
     opacity: 0.82;
   }
 }
@@ -124,8 +131,11 @@
     opacity: 0;
     transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(0.6);
   }
-  18% {
+  14% {
     opacity: 1;
+  }
+  58% {
+    opacity: 0.9;
   }
   100% {
     opacity: 0;
@@ -204,7 +214,7 @@
 }
 
 .animate-bomb-exit {
-  animation: bomb-exit 140ms ease-in forwards;
+  animation: bomb-exit 180ms ease-in forwards;
 }
 
 .animate-tulin-reveal {
@@ -253,7 +263,7 @@
     rgb(239 68 68 / 10%) 42%,
     transparent 70%
   );
-  animation: celebration-soft-glow 390ms ease-out 145ms both;
+  animation: celebration-soft-glow 620ms ease-out 185ms both;
 }
 
 .explosion-screen {
@@ -262,7 +272,7 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  animation: explosion-screen-impact 140ms ease-out 140ms both;
+  animation: explosion-screen-impact 170ms ease-out 180ms both;
 }
 
 .explosion-screen * {
@@ -290,12 +300,12 @@
     rgb(185 28 28 / 24%) 78%,
     transparent 100%
   );
-  animation: explosion-flash 380ms ease-out 135ms both;
+  animation: explosion-flash 520ms ease-out 180ms both;
 }
 
 .explosion-ambient {
   background: linear-gradient(rgb(245 158 11 / 20%), rgb(239 68 68 / 17%));
-  animation: explosion-ambient 125ms ease-out 140ms both;
+  animation: explosion-ambient 210ms ease-out 185ms both;
 }
 
 .explosion-screen .soft-glow--celebration {
@@ -313,21 +323,22 @@
 .explosion-wave--primary {
   border: 4px solid rgb(251 191 36 / 86%);
   box-shadow: 0 0 18px rgb(245 158 11 / 22%);
-  animation: explosion-wave-primary 370ms ease-out 155ms both;
+  animation: explosion-wave-primary 520ms ease-out 240ms both;
 }
 
 .explosion-wave--secondary {
   border: 2px solid rgb(251 146 60 / 62%);
-  animation: explosion-wave-secondary 350ms ease-out 245ms both;
+  animation: explosion-wave-secondary 500ms ease-out 360ms both;
 }
 
 .explosion-burst {
   position: absolute;
   z-index: 3;
   width: clamp(22.5rem, 108vw, 32.5rem);
+  max-width: none;
   height: auto;
   object-fit: contain;
-  animation: explosion-burst 460ms ease-out 140ms both;
+  animation: explosion-burst 680ms ease-out 185ms both;
 }
 
 .explosion-particle {
@@ -338,7 +349,7 @@
   width: var(--particle-size);
   aspect-ratio: 1.4;
   background: var(--particle-color);
-  animation: explosion-particle 520ms cubic-bezier(0.18, 0.72, 0.22, 1) calc(175ms + var(--particle-delay))
+  animation: explosion-particle 750ms cubic-bezier(0.16, 0.7, 0.22, 1) calc(220ms + var(--particle-delay))
     both;
 }
 
@@ -362,15 +373,15 @@
 
   .explosion-flash,
   .explosion-ambient {
-    animation: reduced-explosion-flash 260ms ease-out both;
+    animation: reduced-explosion-flash 380ms ease-out both;
   }
 
   .explosion-burst {
-    animation: reduced-explosion-burst 250ms ease-out 10ms both;
+    animation: reduced-explosion-burst 370ms ease-out 10ms both;
   }
 
   .soft-glow--celebration {
-    animation: reduced-explosion-flash 260ms ease-out both;
+    animation: reduced-explosion-flash 380ms ease-out both;
   }
 
   .explosion-screen {
