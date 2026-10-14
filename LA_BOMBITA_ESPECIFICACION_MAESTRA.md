@@ -478,6 +478,8 @@ CTA:
 
 **Agregar premio**
 
+El estado vacío se presenta centrado directamente sobre el fondo general, sin card ni superficie estructural contenedora. Las cards de esta vista aparecen únicamente cuando existen premios creados.
+
 ---
 
 # 11. Pantalla Ajustes
@@ -661,7 +663,7 @@ La Bombita usa una interfaz **dark-only**. No existe selector de tema ni variant
 
 El rojo principal se usa como acento y acción, no como relleno dominante. Los botones sólidos `primary` y `destructive` deben usar texto oscuro (`background`) para mantener contraste; los acentos pequeños sobre fondos oscuros pueden usar `primary-accent`. Los focos deben ser claramente visibles y las superficies, inputs y estados deshabilitados deben conservar separación suficiente sin depender solo del color.
 
-Las cards estructurales de Premios, Ajustes y demás pantallas usan `surface` (`slate-900`). Los tonos `primary-soft` quedan reservados para selección, alertas, badges y énfasis puntual, no para fondos normales de cards.
+Las cards de premios creados y las cards estructurales de Ajustes y demás pantallas usan `surface` (`slate-900`). El estado vacío de Premios no usa card contenedora. Los tonos `primary-soft` quedan reservados para selección, alertas, badges y énfasis puntual, no para fondos normales de cards.
 
 Ningún estado de Inicio usa cards estructurales contenedoras, incluidos carga y error. La bomba, la escena de revelación, el estado vacío y los mensajes de estado se presentan centrados directamente sobre `background` (`slate-950`). En el estado revelado se conserva únicamente el bloque pequeño del nombre del premio, con borde y contraste accesibles.
 
