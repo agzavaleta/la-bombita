@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import bombLit from "@/assets/bomb/bomb-lit.png"
 import bombUnlit from "@/assets/bomb/bomb-unlit.png"
 import explosionBurst from "@/assets/bomb/explosion-burst.png"
+import { ExplosionOverlay, type ExplosionOrigin } from "@/components/scratch/ExplosionOverlay"
 import {
   eraseScratchPath,
   getRevealedRatio,
@@ -14,7 +15,8 @@ import {
 const REVEAL_THRESHOLD = 0.85
 const GESTURE_START_DISTANCE = 6
 const PROGRESS_CHECK_INTERVAL = 80
-const EXPLOSION_DURATION = 650
+const EXPLOSION_DURATION = 740
+const REDUCED_MOTION_EXPLOSION_DURATION = 180
 
 type RevealPhase = "ready" | "exploding"
 
@@ -41,13 +43,21 @@ function getDistance(firstPoint: ScratchPoint, secondPoint: ScratchPoint): numbe
   return Math.hypot(secondPoint.x - firstPoint.x, secondPoint.y - firstPoint.y)
 }
 
+function getExplosionDuration(): number {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? REDUCED_MOTION_EXPLOSION_DURATION
+    : EXPLOSION_DURATION
+}
+
 export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: ScratchCardProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const scratchSession = useRef<ScratchSession | undefined>(undefined)
   const lastPoint = useRef<ScratchPoint | undefined>(undefined)
   const lastProgressCheck = useRef(0)
   const isRevealPending = useRef(false)
   const explosionTimeout = useRef<number | undefined>(undefined)
+  const [explosionOrigin, setExplosionOrigin] = useState<ExplosionOrigin>()
   const [phase, setPhase] = useState<RevealPhase>("ready")
 
   useEffect(() => {
@@ -132,10 +142,19 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
         return
       }
 
+      const bounds = containerRef.current?.getBoundingClientRect()
+
+      if (bounds) {
+        setExplosionOrigin({
+          x: bounds.left + bounds.width / 2,
+          y: bounds.top + bounds.height / 2,
+        })
+      }
+
       setPhase("exploding")
       explosionTimeout.current = window.setTimeout(() => {
         onSequenceComplete()
-      }, EXPLOSION_DURATION)
+      }, getExplosionDuration())
     } catch {
       isRevealPending.current = false
     }
@@ -252,7 +271,11 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
   }
 
   return (
-    <div className="relative aspect-square overflow-visible rounded-2xl" aria-label="Bomba del premio del día">
+    <div
+      ref={containerRef}
+      className="relative aspect-square overflow-visible rounded-2xl"
+      aria-label="Bomba del premio del día"
+    >
       <span aria-hidden="true" className="soft-glow soft-glow--brand" />
       <img
         alt={phase === "exploding" ? "Bomba a punto de revelar el premio" : "Bomba encendida"}
@@ -279,17 +302,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
         </>
       ) : null}
 
-      {phase === "exploding" ? (
-        <>
-          <span aria-hidden="true" className="soft-glow soft-glow--celebration" />
-          <img
-            alt=""
-            aria-hidden="true"
-            className="animate-explosion-burst absolute inset-0 size-full object-contain p-4"
-            src={explosionBurst}
-          />
-        </>
-      ) : null}
+      {phase === "exploding" && explosionOrigin ? <ExplosionOverlay origin={explosionOrigin} /> : null}
     </div>
   )
 }

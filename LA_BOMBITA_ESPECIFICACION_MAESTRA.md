@@ -318,13 +318,17 @@ Al eliminar aproximadamente **85–90%** de la chispa:
 
 Al revelar el premio:
 
-- la bomba vibra brevemente;
-- aparece un flash o explosión flat ligera;
-- pueden aparecer partículas o chispas discretas;
-- la bomba desaparece;
-- aparece Tulín en la pose `tulin-prize-reveal.png` junto al premio.
+- la bomba anticipa el impacto con una vibración cartoon breve de 120 ms y desaparece;
+- desde el centro real de la bomba aparece un único flash radial fullscreen cálido, nunca blanco sólido;
+- una iluminación ambiental ámbar/roja muy ligera alcanza brevemente toda la interfaz;
+- el soft glow de celebración acompaña el impacto;
+- `explosion-burst.png` aparece localizado en el origen de la bomba;
+- una onda expansiva y nueve partículas flat deterministas completan el efecto;
+- todos los efectos se disipan antes de que aparezca Tulín en la pose `tulin-prize-reveal.png` junto al premio.
 
-No sobrecargar la experiencia.
+La secuencia visual dura aproximadamente 740 ms. El overlay fullscreen es decorativo, usa `pointer-events: none`, no bloquea interacción ni altera la selección, persistencia o revelación del premio. El centro se calcula una sola vez desde `getBoundingClientRect()` del contenedor de la bomba al iniciar la explosión. Con `prefers-reduced-motion` se omiten vibraciones, onda y desplazamientos de partículas, conservando un flash cálido suave y un fade breve del burst antes de mostrar a Tulín.
+
+No sobrecargar la experiencia ni usar humo, fuego, realismo, flashes repetitivos o pantalla blanca sólida.
 
 ---
 

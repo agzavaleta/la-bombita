@@ -27,39 +27,105 @@
 @keyframes bomb-exit {
   0% {
     opacity: 1;
-    transform: translateX(0) rotate(0deg);
+    transform: translateX(0) rotate(0deg) scale(1);
   }
-  25% {
-    transform: translateX(-5px) rotate(-2deg);
+  22% {
+    transform: translateX(-3px) rotate(-1.5deg) scale(1.015);
   }
-  50% {
-    transform: translateX(5px) rotate(2deg);
+  44% {
+    transform: translateX(3px) rotate(1.5deg) scale(1.025);
   }
-  75% {
-    transform: translateX(-4px) rotate(-1deg);
+  66% {
+    transform: translateX(-2px) rotate(-1deg) scale(1.03);
+  }
+  82% {
+    opacity: 1;
+    transform: translateX(1px) rotate(0.5deg) scale(1.03);
   }
   100% {
     opacity: 0;
-    transform: translateX(0) rotate(0deg) scale(0.94);
+    transform: translateX(0) rotate(0deg) scale(0.98);
   }
 }
 
 @keyframes explosion-burst {
   0% {
     opacity: 0;
-    transform: scale(0.35);
+    transform: translate(-50%, -50%) scale(0.45);
   }
-  18% {
+  25% {
     opacity: 1;
-    transform: scale(0.92);
+    transform: translate(-50%, -50%) scale(1.1);
   }
-  58% {
+  48% {
     opacity: 1;
-    transform: scale(1.06);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  72% {
+    opacity: 0.96;
+    transform: translate(-50%, -50%) scale(1.04);
   }
   100% {
     opacity: 0;
-    transform: scale(1.16);
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes explosion-flash {
+  0% {
+    opacity: 0;
+    clip-path: circle(0 at var(--explosion-x) var(--explosion-y));
+  }
+  24% {
+    opacity: 0.9;
+    clip-path: circle(24vmax at var(--explosion-x) var(--explosion-y));
+  }
+  42% {
+    opacity: 0.72;
+    clip-path: circle(70vmax at var(--explosion-x) var(--explosion-y));
+  }
+  100% {
+    opacity: 0;
+    clip-path: circle(150vmax at var(--explosion-x) var(--explosion-y));
+  }
+}
+
+@keyframes explosion-ambient {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes explosion-wave {
+  0% {
+    opacity: 0.82;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.1);
+  }
+}
+
+@keyframes explosion-particle {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(0.6);
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(var(--particle-x), var(--particle-y))
+      rotate(var(--particle-rotate)) scale(1);
   }
 }
 
@@ -89,12 +155,32 @@
   }
 }
 
-.animate-bomb-exit {
-  animation: bomb-exit 140ms ease-in forwards;
+@keyframes reduced-explosion-flash {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.4;
+  }
 }
 
-.animate-explosion-burst {
-  animation: explosion-burst 500ms ease-out 140ms both;
+@keyframes reduced-explosion-burst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.94);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.animate-bomb-exit {
+  animation: bomb-exit 120ms ease-in forwards;
 }
 
 .animate-tulin-reveal {
@@ -143,19 +229,120 @@
     rgb(239 68 68 / 10%) 42%,
     transparent 70%
   );
-  animation: celebration-soft-glow 320ms ease-out 100ms both;
+  animation: celebration-soft-glow 320ms ease-out 110ms both;
+}
+
+.explosion-screen {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.explosion-screen * {
+  pointer-events: none;
+}
+
+.explosion-centered {
+  top: var(--explosion-y);
+  left: var(--explosion-x);
+}
+
+.explosion-flash,
+.explosion-ambient {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+}
+
+.explosion-flash {
+  background: radial-gradient(
+    circle at var(--explosion-x) var(--explosion-y),
+    rgb(254 240 138 / 78%) 0%,
+    rgb(245 158 11 / 46%) 11%,
+    rgb(239 68 68 / 16%) 30%,
+    transparent 66%
+  );
+  animation: explosion-flash 300ms ease-out 105ms both;
+}
+
+.explosion-ambient {
+  background: linear-gradient(rgb(245 158 11 / 11%), rgb(239 68 68 / 8%));
+  animation: explosion-ambient 190ms ease-out 115ms both;
+}
+
+.explosion-screen .soft-glow--celebration {
+  z-index: 1;
+}
+
+.explosion-wave {
+  position: absolute;
+  z-index: 2;
+  width: clamp(7.5rem, 34vw, 10rem);
+  aspect-ratio: 1;
+  border: 3px solid rgb(251 191 36 / 78%);
+  border-radius: 9999px;
+  box-shadow: 0 0 18px rgb(245 158 11 / 18%);
+  animation: explosion-wave 330ms ease-out 130ms both;
+}
+
+.explosion-burst {
+  position: absolute;
+  z-index: 3;
+  width: clamp(17rem, 75vw, 22rem);
+  height: auto;
+  object-fit: contain;
+  animation: explosion-burst 420ms ease-out 115ms both;
+}
+
+.explosion-particle {
+  position: absolute;
+  z-index: 4;
+  top: var(--explosion-y);
+  left: var(--explosion-x);
+  width: var(--particle-size);
+  aspect-ratio: 1.4;
+  background: var(--particle-color);
+  animation: explosion-particle 500ms cubic-bezier(0.18, 0.72, 0.22, 1) calc(125ms + var(--particle-delay))
+    both;
+}
+
+.explosion-particle--round {
+  border-radius: 9999px;
+}
+
+.explosion-particle--spark {
+  border-radius: 9999px 35%;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-bomb-exit,
-  .animate-explosion-burst,
-  .animate-tulin-reveal,
-  .soft-glow--celebration {
+  .animate-bomb-exit {
+    opacity: 0;
+    animation: none;
+  }
+
+  .animate-tulin-reveal {
     animation-duration: 1ms;
   }
 
+  .explosion-flash,
+  .explosion-ambient {
+    clip-path: none;
+    animation: reduced-explosion-flash 120ms ease-out both;
+  }
+
+  .explosion-burst {
+    animation: reduced-explosion-burst 140ms ease-out 20ms both;
+  }
+
   .soft-glow--celebration {
-    animation-delay: 0ms;
+    animation: reduced-explosion-flash 120ms ease-out both;
+  }
+
+  .explosion-wave,
+  .explosion-particle {
+    display: none;
   }
 }
 
