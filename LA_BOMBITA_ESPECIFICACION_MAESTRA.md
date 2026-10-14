@@ -331,14 +331,17 @@ Al revelar el premio:
 
 La secuencia visual dura aproximadamente 1350 ms e incluye una pausa final limpia de unos 160 ms antes de mostrar a Tulín. El burst permanece visible durante 680 ms y las partículas comienzan por grupos desde unos 220 ms para finalizar cerca de 1190 ms. El overlay fullscreen es decorativo, usa `pointer-events: none`, no bloquea interacción ni altera la selección, persistencia o revelación del premio. El centro se calcula una sola vez desde `getBoundingClientRect()` del contenedor de la bomba al iniciar la explosión. Con `prefers-reduced-motion` la secuencia dura 390 ms: se omiten vibraciones, golpe de pantalla, ondas y desplazamientos de partículas, pero se mantienen un flash cálido fullscreen claramente visible y el burst principal grande con un fade breve antes de mostrar a Tulín.
 
-La celebración incluye dos efectos sintetizados con Web Audio API, sin archivos, servicios externos ni librerías de audio:
+La interacción y celebración incluyen tres efectos sintetizados con Web Audio API, sin archivos, servicios externos ni librerías de audio:
 
-- un `POP / BOOM` cartoon moderado, generado con un golpe grave, un pop agudo y ruido filtrado breve, comienza junto al impacto visual a los 180 ms y dura aproximadamente 400 ms;
-- un ding positivo de dos notas comienza al aparecer Tulín, a los 1350 ms, y dura aproximadamente 540 ms.
+- un sonido continuo de raspado basado en ruido filtrado entre 850 y 4200 Hz comienza únicamente cuando el gesto real supera unos 6 px; usa una sola fuente mientras el dedo se mueve y termina con un fade de 30 ms al levantar o cancelar el gesto, al alcanzar el 85% o al desmontar la vista;
+- un `POP / BOOM` cartoon con presencia para altavoces móviles, generado con cuerpo de 270 a 125 Hz, impacto de 850 a 300 Hz y ruido filtrado entre 700 y 2500 Hz, comienza junto al impacto visual a los 180 ms y dura aproximadamente 400 ms;
+- un ding positivo de dos notas ascendentes, con salida reforzada pero inferior al boom, comienza al aparecer Tulín, a los 1350 ms, y dura aproximadamente 540 ms.
+
+Los tres efectos comparten un `DynamicsCompressorNode` de salida con threshold de -15 dB, knee 14, ratio 4:1, attack de 4 ms y release de 220 ms, seguido por una compensación moderada de ganancia de 1.35. Esto aumenta la presencia y controla picos sin volver los sonidos estridentes. El raspado, boom y ding mantienen ganancias claramente perceptibles en parlantes móviles; el boom continúa siendo el efecto dominante.
 
 En `prefers-reduced-motion`, el boom comienza junto al impacto reducido a los 10 ms y el ding coincide con la aparición de Tulín a los 390 ms. El audio no depende de la animación para comunicar información y no se desactiva por la preferencia de movimiento reducido.
 
-Safari/iOS requiere desbloquear Web Audio desde una interacción explícita. El primer `pointerdown` válido sobre la chispa configura `navigator.audioSession.type = "playback"` cuando la API existe, crea o recupera un único `AudioContext`, ejecuta `resume()` si hace falta y reproduce un buffer inaudible de un frame conectado a `destination`. Todo el warm-up se inicia dentro del gesto, sin sonido perceptible, sin seleccionar el premio y sin esperar sus promesas para continuar. Un tap aislado continúa sin iniciar el sorteo: la selección ocurre únicamente después del gesto real de unos 6 px. No hay sonido de raspado en esta etapa.
+Safari/iOS requiere desbloquear Web Audio desde una interacción explícita. El primer `pointerdown` válido sobre la chispa configura `navigator.audioSession.type = "playback"` cuando la API existe, crea o recupera un único `AudioContext`, ejecuta `resume()` si hace falta y reproduce un buffer inaudible de un frame conectado a `destination`. Todo el warm-up se inicia dentro del gesto, sin sonido perceptible, sin seleccionar el premio y sin esperar sus promesas para continuar. Un tap aislado continúa sin iniciar el sorteo ni el sonido de raspado: ambos comienzan únicamente después del gesto real de unos 6 px.
 
 Al volver la app a primer plano se inspecciona el contexto sin bloquear la interfaz: un contexto suspendido intenta reanudarse, mientras uno cerrado, interrumpido o claramente inutilizable queda marcado para recrearse en el siguiente gesto válido. Los efectos solo usan el contexto singleton previamente desbloqueado; nunca crean uno al sonar ni dejan la revelación esperando un `resume()`.
 
@@ -534,7 +537,7 @@ Debe existir una fuente única de versión, idealmente `package.json`, y la inte
 
 Ajustes muestra una preferencia **Sonidos** con la descripción **Reproduce efectos al descubrir el premio.** y un switch accesible **Activado / Desactivado**.
 
-La preferencia está activada por defecto y se persiste en el store `app-state` de IndexedDB con la clave `sound-enabled`, sin crear otra base ni modificar el esquema. Al desactivarla no se configura `audioSession`, no se crea ni calienta un `AudioContext` y no se reproducen el boom o el ding, pero la secuencia visual permanece idéntica. El cambio tiene efecto inmediato y no reproduce sonido de prueba.
+La preferencia está activada por defecto y se persiste en el store `app-state` de IndexedDB con la clave `sound-enabled`, sin crear otra base ni modificar el esquema. Al desactivarla no se configura `audioSession`, no se crea ni calienta un `AudioContext` y no se reproducen el raspado, boom o ding, pero la secuencia visual permanece idéntica. El cambio tiene efecto inmediato y no reproduce sonido de prueba.
 
 Los efectos son complementarios: el premio y todos los estados continúan comunicándose visualmente. Los fallos o la ausencia de Web Audio no bloquean el flujo ni generan mensajes de error para el usuario.
 
@@ -958,7 +961,6 @@ La versión 1.0.0 estará lista cuando:
 
 - Icono final de PWA.
 - Contenido narrativo definitivo de la historia de Tulín.
-- Sonido final de raspado.
 - Ajustes finos de animación.
 
 ---

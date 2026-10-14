@@ -11,7 +11,13 @@ import {
   paintSparkCanvas,
   type ScratchPoint,
 } from "@/components/scratch/scratch-canvas"
-import { playExplosionSound, playPrizeRevealSound, unlockAudio } from "@/lib/audio/sound-effects"
+import {
+  playExplosionSound,
+  playPrizeRevealSound,
+  startScratchSound,
+  stopScratchSound,
+  unlockAudio,
+} from "@/lib/audio/sound-effects"
 
 const REVEAL_THRESHOLD = 0.85
 const GESTURE_START_DISTANCE = 6
@@ -107,6 +113,8 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete, soun
 
   useEffect(
     () => () => {
+      stopScratchSound()
+
       if (explosionTimeout.current !== undefined) {
         window.clearTimeout(explosionTimeout.current)
       }
@@ -143,10 +151,15 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete, soun
   const checkRevealProgress = useCallback(async () => {
     const canvas = canvasRef.current
 
-    if (isRevealPending.current || !canvas || getRevealedRatio(canvas) < REVEAL_THRESHOLD) {
+    if (isRevealPending.current || !canvas) {
       return
     }
 
+    if (getRevealedRatio(canvas) < REVEAL_THRESHOLD) {
+      return
+    }
+
+    stopScratchSound()
     isRevealPending.current = true
 
     try {
@@ -193,6 +206,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete, soun
       }
 
       if (!canScratch) {
+        stopScratchSound()
         scratchSession.current = undefined
         return
       }
@@ -260,6 +274,11 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete, soun
 
       if (!session.hasStarted && getDistance(session.initialPoint, point) >= GESTURE_START_DISTANCE) {
         session.hasStarted = true
+
+        if (soundEnabled) {
+          startScratchSound()
+        }
+
         void prepareScratch(session)
       }
     }
@@ -278,6 +297,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete, soun
     }
 
     session.hasEnded = true
+    stopScratchSound()
 
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId)
