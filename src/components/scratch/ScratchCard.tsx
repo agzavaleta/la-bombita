@@ -253,6 +253,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
 
   return (
     <div className="relative aspect-square overflow-hidden rounded-2xl" aria-label="Bomba del premio del día">
+      <span aria-hidden="true" className="home-soft-glow" />
       <img
         alt={phase === "exploding" ? "Bomba a punto de revelar el premio" : "Bomba encendida"}
         className={`absolute inset-0 size-full object-contain p-3 ${phase === "exploding" ? "animate-bomb-exit" : ""}`}

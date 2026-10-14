@@ -86,6 +86,27 @@
   animation: tulin-reveal 360ms ease-out both;
 }
 
+.home-soft-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(13.75rem, 72vw, 17.5rem);
+  aspect-ratio: 1;
+  pointer-events: none;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgb(239 68 68 / 16%) 0%,
+    rgb(239 68 68 / 7%) 35%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+}
+
+.home-soft-glow--reveal {
+  top: 42%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-bomb-exit,
   .animate-explosion-burst,

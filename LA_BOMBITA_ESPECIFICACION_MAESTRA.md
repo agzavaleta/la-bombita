@@ -668,6 +668,8 @@ Las cards de premios creados y las cards estructurales de Ajustes y demás panta
 
 Ningún estado de Inicio usa cards estructurales contenedoras, incluidos carga y error. La bomba, la escena de revelación, el estado vacío y los mensajes de estado se presentan centrados directamente sobre `background` (`slate-950`). En el estado revelado se conserva únicamente el bloque pequeño del nombre del premio, con borde y contraste accesibles.
 
+Inicio usa un soft glow ambiental rojo muy sutil detrás del elemento protagonista: Tulín en el estado vacío, la bomba disponible para raspar y Tulín con el premio revelado. Es un radial gradient decorativo, estático, sin bordes ni interacción, y no constituye una card o superficie contenedora.
+
 ---
 
 # 15. Tipografía

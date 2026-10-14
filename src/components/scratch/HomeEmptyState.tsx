@@ -10,7 +10,10 @@ type HomeEmptyStateProps = {
 export function HomeEmptyState({ onAddFirstPrize }: HomeEmptyStateProps) {
   return (
     <div className="flex w-full max-w-sm flex-col items-center px-6 py-9 text-center">
-      <img alt="Tulín Bombín" className="h-48 w-48 object-contain" src={tulinEmptyState} />
+      <div className="relative flex h-48 w-48 items-center justify-center">
+        <span aria-hidden="true" className="home-soft-glow" />
+        <img alt="Tulín Bombín" className="relative size-full object-contain" src={tulinEmptyState} />
+      </div>
       <h2 className="mt-6 text-xl font-extrabold">Aún no tienes premios</h2>
       <p className="mt-2 text-sm text-text-secondary">Agrega tu primer premio para comenzar.</p>
       <Button type="button" size="lg" className="mt-6 w-full" onClick={onAddFirstPrize}>
