@@ -333,11 +333,11 @@ La secuencia visual dura aproximadamente 1350 ms e incluye una pausa final limpi
 
 La interacción y celebración incluyen tres efectos sintetizados con Web Audio API, sin archivos, servicios externos ni librerías de audio:
 
-- un sonido continuo de raspado basado en ruido filtrado entre 850 y 4200 Hz comienza únicamente cuando el gesto real supera unos 6 px; usa una sola fuente mientras el dedo se mueve y termina con un fade de 30 ms al levantar o cancelar el gesto, al alcanzar el 85% o al desmontar la vista;
-- un `POP / BOOM` cartoon con presencia para altavoces móviles, generado con cuerpo de 270 a 125 Hz, impacto de 850 a 300 Hz y ruido filtrado entre 700 y 2500 Hz, comienza junto al impacto visual a los 180 ms y dura aproximadamente 400 ms;
-- un ding positivo de dos notas ascendentes, con salida reforzada pero inferior al boom, comienza al aparecer Tulín, a los 1350 ms, y dura aproximadamente 540 ms.
+- un sonido continuo de raspado basado en ruido filtrado entre 850 y 4200 Hz y gain `0.34` comienza únicamente cuando el gesto real supera unos 6 px; usa una sola fuente mientras el dedo se mueve y termina con un fade de 30 ms al levantar o cancelar el gesto, al alcanzar el 85% o al desmontar la vista;
+- un `POP / BOOM` cartoon con presencia para altavoces móviles, generado con cuerpo de 270 a 125 Hz (gain `0.65`), impacto de 850 a 300 Hz (gain `0.52`) y ruido filtrado entre 700 y 2500 Hz (gain `0.40`), bajo un master gain `1.0`, comienza junto al impacto visual a los 180 ms y dura aproximadamente 400 ms;
+- un ding positivo de dos notas ascendentes, con master gain `0.95` y gain `0.45` por nota, comienza al aparecer Tulín, a los 1350 ms, y dura aproximadamente 540 ms. Cada nota suma una armónica suave al doble de su frecuencia, con gain `0.10` y envolvente ligeramente más corta, para aportar brillo sin modificar la melodía.
 
-Los tres efectos comparten un `DynamicsCompressorNode` de salida con threshold de -15 dB, knee 14, ratio 4:1, attack de 4 ms y release de 220 ms, seguido por una compensación moderada de ganancia de 1.35. Esto aumenta la presencia y controla picos sin volver los sonidos estridentes. El raspado, boom y ding mantienen ganancias claramente perceptibles en parlantes móviles; el boom continúa siendo el efecto dominante.
+Los tres efectos comparten un `DynamicsCompressorNode` de salida con threshold de -15 dB, knee 14, ratio 4:1, attack de 4 ms y release de 220 ms, seguido por una ganancia de salida de `1.6`. Esto refuerza la presencia y controla picos sin volver los sonidos estridentes. El objetivo es que raspado, boom y ding sean claramente audibles sin esfuerzo en parlantes móviles a volumen medio; el boom continúa siendo el efecto dominante y el ding queda claramente marcado después de él.
 
 En `prefers-reduced-motion`, el boom comienza junto al impacto reducido a los 10 ms y el ding coincide con la aparición de Tulín a los 390 ms. El audio no depende de la animación para comunicar información y no se desactiva por la preferencia de movimiento reducido.
 

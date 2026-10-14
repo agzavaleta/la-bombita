@@ -123,7 +123,7 @@ function getEffectsOutput(context: AudioContext): DynamicsCompressorNode {
   compressor.attack.setValueAtTime(0.004, context.currentTime)
   compressor.release.setValueAtTime(0.22, context.currentTime)
   const outputGain = context.createGain()
-  outputGain.gain.setValueAtTime(1.35, context.currentTime)
+  outputGain.gain.setValueAtTime(1.6, context.currentTime)
   compressor.connect(outputGain).connect(context.destination)
   effectsCompressor = compressor
   effectsOutputGain = outputGain
@@ -344,7 +344,7 @@ export function startScratchSound(): void {
     lowpass.frequency.setValueAtTime(4200, now)
     lowpass.Q.setValueAtTime(0.7, now)
     gain.gain.setValueAtTime(0.0001, now)
-    gain.gain.exponentialRampToValueAtTime(0.22, now + 0.025)
+    gain.gain.exponentialRampToValueAtTime(0.34, now + 0.025)
     source.connect(highpass).connect(lowpass).connect(gain).connect(getEffectsOutput(runningContext))
 
     activeScratchSound = { context: runningContext, gain, highpass, isStopping: false, lowpass, source }
@@ -361,12 +361,12 @@ export function playExplosionSound(): void {
   runAudioEffect((context) => {
     const startTime = context.currentTime + 0.005
     const masterGain = context.createGain()
-    masterGain.gain.setValueAtTime(0.85, startTime)
+    masterGain.gain.setValueAtTime(1, startTime)
     masterGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.42)
     masterGain.connect(getEffectsOutput(context))
 
     const boom = context.createOscillator()
-    const boomGain = createEnvelope(context, 0.55, 0.008, 0.36)
+    const boomGain = createEnvelope(context, 0.65, 0.008, 0.36)
     boom.type = "triangle"
     boom.frequency.setValueAtTime(270, startTime)
     boom.frequency.exponentialRampToValueAtTime(125, startTime + 0.34)
@@ -384,7 +384,7 @@ export function playExplosionSound(): void {
     )
 
     const pop = context.createOscillator()
-    const popGain = createEnvelope(context, 0.42, 0.004, 0.15)
+    const popGain = createEnvelope(context, 0.52, 0.004, 0.15)
     pop.type = "triangle"
     pop.frequency.setValueAtTime(850, startTime)
     pop.frequency.exponentialRampToValueAtTime(300, startTime + 0.14)
@@ -411,7 +411,7 @@ export function playExplosionSound(): void {
     const noise = context.createBufferSource()
     const noiseHighpass = context.createBiquadFilter()
     const noiseLowpass = context.createBiquadFilter()
-    const noiseGain = createEnvelope(context, 0.32, 0.005, 0.23)
+    const noiseGain = createEnvelope(context, 0.4, 0.005, 0.23)
     noise.buffer = noiseBuffer
     noiseHighpass.type = "highpass"
     noiseHighpass.frequency.setValueAtTime(700, startTime)
@@ -438,7 +438,7 @@ export function playPrizeRevealSound(): void {
   runAudioEffect((context) => {
     const startTime = context.currentTime + 0.005
     const masterGain = context.createGain()
-    masterGain.gain.setValueAtTime(0.62, startTime)
+    masterGain.gain.setValueAtTime(0.95, startTime)
     masterGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.54)
     masterGain.connect(getEffectsOutput(context))
 
@@ -451,14 +451,25 @@ export function playPrizeRevealSound(): void {
       const noteStartTime = startTime + note.offset
       const oscillator = context.createOscillator()
       const noteGain = context.createGain()
+      const harmonic = context.createOscillator()
+      const harmonicGain = context.createGain()
+      const harmonicDuration = note.duration * 0.85
       oscillator.type = "sine"
       oscillator.frequency.setValueAtTime(note.frequency, noteStartTime)
       noteGain.gain.setValueAtTime(0.0001, noteStartTime)
-      noteGain.gain.exponentialRampToValueAtTime(0.3, noteStartTime + 0.015)
+      noteGain.gain.exponentialRampToValueAtTime(0.45, noteStartTime + 0.015)
       noteGain.gain.exponentialRampToValueAtTime(0.0001, noteStartTime + note.duration)
+      harmonic.type = "sine"
+      harmonic.frequency.setValueAtTime(note.frequency * 2, noteStartTime)
+      harmonicGain.gain.setValueAtTime(0.0001, noteStartTime)
+      harmonicGain.gain.exponentialRampToValueAtTime(0.1, noteStartTime + 0.015)
+      harmonicGain.gain.exponentialRampToValueAtTime(0.0001, noteStartTime + harmonicDuration)
       oscillator.connect(noteGain).connect(masterGain)
+      harmonic.connect(harmonicGain).connect(masterGain)
       oscillator.start(noteStartTime)
       oscillator.stop(noteStartTime + note.duration)
+      harmonic.start(noteStartTime)
+      harmonic.stop(noteStartTime + harmonicDuration)
       oscillator.addEventListener(
         "ended",
         () => {
@@ -468,6 +479,14 @@ export function playPrizeRevealSound(): void {
           if (index === notes.length - 1) {
             masterGain.disconnect()
           }
+        },
+        { once: true },
+      )
+      harmonic.addEventListener(
+        "ended",
+        () => {
+          harmonic.disconnect()
+          harmonicGain.disconnect()
         },
         { once: true },
       )
