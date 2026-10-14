@@ -2,13 +2,61 @@ type WebkitAudioWindow = Window & {
   webkitAudioContext?: typeof AudioContext
 }
 
-let audioContext: AudioContext | undefined
+type IOSAudioContextState = AudioContextState | "interrupted"
 
-function getAudioContext(): AudioContext | undefined {
-  if (audioContext?.state !== "closed") {
-    return audioContext
+type NavigatorWithAudioSession = Navigator & {
+  audioSession?: {
+    type: string
+  }
+}
+
+let audioContext: AudioContext | undefined
+let isAudioUnlocked = false
+let needsContextRecreation = false
+let isVisibilityRecoveryRegistered = false
+
+function getContextState(context: AudioContext): IOSAudioContextState {
+  return context.state
+}
+
+function isContextUnusable(context: AudioContext): boolean {
+  const state = getContextState(context)
+  return state === "closed" || state === "interrupted"
+}
+
+function markContextForRecreation(context: AudioContext): void {
+  if (audioContext !== context) {
+    return
   }
 
+  isAudioUnlocked = false
+  needsContextRecreation = true
+}
+
+function discardAudioContext(): void {
+  const context = audioContext
+  audioContext = undefined
+  isAudioUnlocked = false
+  needsContextRecreation = false
+
+  if (context && getContextState(context) !== "closed") {
+    void context.close().catch(() => undefined)
+  }
+}
+
+function configureIOSAudioSession(): void {
+  try {
+    const audioSession = (navigator as NavigatorWithAudioSession).audioSession
+
+    if (audioSession) {
+      audioSession.type = "playback"
+    }
+  } catch {
+    // Web Audio sigue disponible aunque iOS no exponga o rechace AudioSession.
+  }
+}
+
+function createAudioContext(): AudioContext | undefined {
   const AudioContextConstructor = window.AudioContext ?? (window as WebkitAudioWindow).webkitAudioContext
 
   if (!AudioContextConstructor) {
@@ -16,11 +64,76 @@ function getAudioContext(): AudioContext | undefined {
   }
 
   try {
-    audioContext = new AudioContextConstructor()
-    return audioContext
+    return new AudioContextConstructor()
   } catch {
     return undefined
   }
+}
+
+function getAudioContextForGesture(): AudioContext | undefined {
+  if (audioContext && (needsContextRecreation || isContextUnusable(audioContext))) {
+    discardAudioContext()
+  }
+
+  if (!audioContext) {
+    audioContext = createAudioContext()
+  }
+
+  return audioContext
+}
+
+function warmUpAudioOutput(context: AudioContext): void {
+  const buffer = context.createBuffer(1, 1, context.sampleRate)
+  const source = context.createBufferSource()
+  source.buffer = buffer
+  source.connect(context.destination)
+  source.start()
+}
+
+function attemptContextResume(context: AudioContext): void {
+  if (getContextState(context) === "running") {
+    return
+  }
+
+  try {
+    void context
+      .resume()
+      .then(() => {
+        if (audioContext === context && getContextState(context) !== "running") {
+          markContextForRecreation(context)
+        }
+      })
+      .catch(() => markContextForRecreation(context))
+  } catch {
+    markContextForRecreation(context)
+  }
+}
+
+function recoverAudioAfterVisibilityChange(): void {
+  if (document.visibilityState !== "visible" || !audioContext) {
+    return
+  }
+
+  const context = audioContext
+  const state = getContextState(context)
+
+  if (state === "closed" || state === "interrupted") {
+    markContextForRecreation(context)
+    return
+  }
+
+  if (state === "suspended") {
+    attemptContextResume(context)
+  }
+}
+
+function registerVisibilityRecovery(): void {
+  if (isVisibilityRecoveryRegistered) {
+    return
+  }
+
+  document.addEventListener("visibilitychange", recoverAudioAfterVisibilityChange)
+  isVisibilityRecoveryRegistered = true
 }
 
 function createEnvelope(
@@ -37,36 +150,56 @@ function createEnvelope(
   return gain
 }
 
-async function runAudioEffect(effect: (context: AudioContext) => void): Promise<void> {
-  const context = getAudioContext()
+function runAudioEffect(effect: (context: AudioContext) => void): void {
+  const context = audioContext
 
-  if (!context) {
+  if (!context || !isAudioUnlocked || needsContextRecreation) {
     return
   }
 
-  if (context.state !== "running") {
-    await context.resume()
+  const state = getContextState(context)
+
+  if (state === "running") {
+    try {
+      effect(context)
+    } catch {
+      markContextForRecreation(context)
+    }
+
+    return
   }
 
-  if (context.state === "running") {
-    effect(context)
+  if (state === "closed" || state === "interrupted") {
+    markContextForRecreation(context)
+    return
   }
+
+  attemptContextResume(context)
 }
 
 export function unlockAudio(): void {
   try {
-    const context = getAudioContext()
+    configureIOSAudioSession()
+    registerVisibilityRecovery()
 
-    if (context && context.state !== "running") {
-      void context.resume().catch(() => undefined)
+    const context = getAudioContextForGesture()
+
+    if (!context) {
+      return
     }
+
+    attemptContextResume(context)
+    warmUpAudioOutput(context)
+    isAudioUnlocked = true
   } catch {
-    // El audio es complementario; su ausencia nunca debe interrumpir el raspado.
+    if (audioContext) {
+      markContextForRecreation(audioContext)
+    }
   }
 }
 
 export function playExplosionSound(): void {
-  void runAudioEffect((context) => {
+  runAudioEffect((context) => {
     const startTime = context.currentTime + 0.005
     const masterGain = context.createGain()
     masterGain.gain.setValueAtTime(0.52, startTime)
@@ -109,11 +242,11 @@ export function playExplosionSound(): void {
     noise.connect(noiseFilter).connect(noiseGain).connect(masterGain)
     noise.start(startTime)
     noise.stop(startTime + 0.2)
-  }).catch(() => undefined)
+  })
 }
 
 export function playPrizeRevealSound(): void {
-  void runAudioEffect((context) => {
+  runAudioEffect((context) => {
     const startTime = context.currentTime + 0.005
     const masterGain = context.createGain()
     masterGain.gain.setValueAtTime(0.42, startTime)
@@ -138,5 +271,5 @@ export function playPrizeRevealSound(): void {
       oscillator.start(noteStartTime)
       oscillator.stop(noteStartTime + note.duration)
     })
-  }).catch(() => undefined)
+  })
 }

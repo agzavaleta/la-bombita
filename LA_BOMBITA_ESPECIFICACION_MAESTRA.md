@@ -338,7 +338,9 @@ La celebración incluye dos efectos sintetizados con Web Audio API, sin archivos
 
 En `prefers-reduced-motion`, el boom comienza junto al impacto reducido a los 10 ms y el ding coincide con la aparición de Tulín a los 390 ms. El audio no depende de la animación para comunicar información y no se desactiva por la preferencia de movimiento reducido.
 
-Safari/iOS requiere desbloquear Web Audio desde una interacción explícita. El primer `pointerdown` válido sobre la chispa crea o recupera un único `AudioContext` y ejecuta `resume()` si está suspendido, sin reproducir sonido ni seleccionar el premio. Un tap aislado continúa sin iniciar el sorteo: la selección ocurre únicamente después del gesto real de unos 6 px. No hay sonido de raspado en esta etapa.
+Safari/iOS requiere desbloquear Web Audio desde una interacción explícita. El primer `pointerdown` válido sobre la chispa configura `navigator.audioSession.type = "playback"` cuando la API existe, crea o recupera un único `AudioContext`, ejecuta `resume()` si hace falta y reproduce un buffer inaudible de un frame conectado a `destination`. Todo el warm-up se inicia dentro del gesto, sin sonido perceptible, sin seleccionar el premio y sin esperar sus promesas para continuar. Un tap aislado continúa sin iniciar el sorteo: la selección ocurre únicamente después del gesto real de unos 6 px. No hay sonido de raspado en esta etapa.
+
+Al volver la app a primer plano se inspecciona el contexto sin bloquear la interfaz: un contexto suspendido intenta reanudarse, mientras uno cerrado, interrumpido o claramente inutilizable queda marcado para recrearse en el siguiente gesto válido. Los efectos solo usan el contexto singleton previamente desbloqueado; nunca crean uno al sonar ni dejan la revelación esperando un `resume()`.
 
 No sobrecargar la experiencia ni usar humo, fuego, realismo, flashes repetitivos o pantalla blanca sólida.
 
@@ -532,7 +534,7 @@ Debe existir una fuente única de versión, idealmente `package.json`, y la inte
 
 Ajustes muestra una preferencia **Sonidos** con la descripción **Reproduce efectos al descubrir el premio.** y un switch accesible **Activado / Desactivado**.
 
-La preferencia está activada por defecto y se persiste en el store `app-state` de IndexedDB con la clave `sound-enabled`, sin crear otra base ni modificar el esquema. Al desactivarla no se inicializa Web Audio ni se reproducen el boom o el ding, pero la secuencia visual permanece idéntica. El cambio tiene efecto inmediato y no reproduce sonido de prueba.
+La preferencia está activada por defecto y se persiste en el store `app-state` de IndexedDB con la clave `sound-enabled`, sin crear otra base ni modificar el esquema. Al desactivarla no se configura `audioSession`, no se crea ni calienta un `AudioContext` y no se reproducen el boom o el ding, pero la secuencia visual permanece idéntica. El cambio tiene efecto inmediato y no reproduce sonido de prueba.
 
 Los efectos son complementarios: el premio y todos los estados continúan comunicándose visualmente. Los fallos o la ausencia de Web Audio no bloquean el flujo ni generan mensajes de error para el usuario.
 
