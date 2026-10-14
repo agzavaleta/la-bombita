@@ -318,15 +318,16 @@ Al eliminar aproximadamente **85–90%** de la chispa:
 
 Al revelar el premio:
 
-- la bomba anticipa el impacto con una vibración cartoon breve de 120 ms y desaparece;
-- desde el centro real de la bomba aparece un único flash radial fullscreen cálido, nunca blanco sólido;
-- una iluminación ambiental ámbar/roja muy ligera alcanza brevemente toda la interfaz;
+- la bomba anticipa el impacto con dos o tres vibraciones cartoon claras durante 140 ms, alcanza como máximo 3 px de desplazamiento y escala 1.06, y desaparece;
+- desde el centro real de la bomba aparece un único flash radial fullscreen cálido claramente visible durante 380 ms, nunca blanco sólido;
+- una iluminación ambiental ámbar/roja del 15–22% alcanza brevemente toda la interfaz durante 125 ms;
 - el soft glow de celebración acompaña el impacto;
-- `explosion-burst.png` aparece localizado en el origen de la bomba;
-- una onda expansiva y nueve partículas flat deterministas completan el efecto;
+- `explosion-burst.png` aparece sobredimensionado y localizado en el origen de la bomba, con un tamaño responsive de 360–520 px;
+- dos ondas expansivas consecutivas y quince partículas flat deterministas de 10–22 px, con recorridos de hasta 250 px, completan el efecto;
+- el overlay completo recibe un golpe visual breve de 140 ms y un máximo de 2 px, sin alterar el layout, la navegación ni las safe areas;
 - todos los efectos se disipan antes de que aparezca Tulín en la pose `tulin-prize-reveal.png` junto al premio.
 
-La secuencia visual dura aproximadamente 740 ms. El overlay fullscreen es decorativo, usa `pointer-events: none`, no bloquea interacción ni altera la selección, persistencia o revelación del premio. El centro se calcula una sola vez desde `getBoundingClientRect()` del contenedor de la bomba al iniciar la explosión. Con `prefers-reduced-motion` se omiten vibraciones, onda y desplazamientos de partículas, conservando un flash cálido suave y un fade breve del burst antes de mostrar a Tulín.
+La secuencia visual dura aproximadamente 870 ms e incluye una pausa final de unos 120 ms antes de mostrar a Tulín. El overlay fullscreen es decorativo, usa `pointer-events: none`, no bloquea interacción ni altera la selección, persistencia o revelación del premio. El centro se calcula una sola vez desde `getBoundingClientRect()` del contenedor de la bomba al iniciar la explosión. Con `prefers-reduced-motion` la secuencia dura 280 ms: se omiten vibraciones, golpe de pantalla, ondas y desplazamientos de partículas, pero se mantienen un flash cálido fullscreen claramente visible y el burst principal grande con un fade breve antes de mostrar a Tulín.
 
 No sobrecargar la experiencia ni usar humo, fuego, realismo, flashes repetitivos o pantalla blanca sólida.
 
@@ -678,7 +679,7 @@ El soft glow es un recurso de marca reservado a elementos protagonistas. Siempre
 
 - **Base de marca:** rojo `red-500`, tamaño responsive de 220–280 px, 16% al centro, 7% al 35% y transparente al 70%. Se usa detrás de Tulín en el estado vacío de Inicio, la bomba raspable y Tulín con el premio revelado. Es estático.
 - **Estado vacío de Premios:** rojo `red-500`, tamaño responsive de 140–180 px, 12% al centro, 5% al 35% y transparente al 70%. Se centra detrás del icono de regalo y es estático.
-- **Celebración:** tamaño responsive de 240–320 px, mezcla radial de `amber-500` al 24% en el centro y `red-500` al 10%, desvaneciéndose hasta transparente al 70%. Aparece detrás de la explosión durante 320 ms y respeta `prefers-reduced-motion`, sin modificar los tiempos funcionales de revelación.
+- **Celebración:** tamaño responsive de 240–320 px, mezcla radial de `amber-500` al 24% en el centro y `red-500` al 10%, desvaneciéndose hasta transparente al 70%. Aparece detrás de la explosión durante 390 ms y respeta `prefers-reduced-motion`, sin modificar los tiempos funcionales de revelación.
 
 ---
 
