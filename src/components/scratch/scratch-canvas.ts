@@ -1,6 +1,9 @@
 const BRUSH_SIZE = 30
 const DRAWING_INSET = 12
 const PIXEL_SAMPLE_STEP = 4
+// The lit and unlit assets have different fuse geometry; align the isolated spark with the unlit fuse tip.
+const SPARK_OFFSET_X_RATIO = 0.103
+const SPARK_OFFSET_Y_RATIO = -0.131
 const sparkSampleIndices = new WeakMap<HTMLCanvasElement, number[]>()
 
 export type ScratchPoint = {
@@ -24,9 +27,7 @@ function isSparkPixel(pixels: Uint8ClampedArray, pixelIndex: number, xRatio: num
   return alpha >= 16 && red >= 225 && green >= 80 && blue <= 70 && red - blue >= 155
 }
 
-function isolateSparkPixels(pixels: Uint8ClampedArray, width: number, height: number): number[] {
-  const samples: number[] = []
-
+function isolateSparkPixels(pixels: Uint8ClampedArray, width: number, height: number): void {
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       const pixelIndex = (y * width + x) * 4
@@ -34,8 +35,20 @@ function isolateSparkPixels(pixels: Uint8ClampedArray, width: number, height: nu
 
       if (!isSpark) {
         pixels[pixelIndex + 3] = 0
-      } else if (x % PIXEL_SAMPLE_STEP === 0 && y % PIXEL_SAMPLE_STEP === 0) {
-        samples.push(pixelIndex + 3)
+      }
+    }
+  }
+}
+
+function collectSparkSampleIndices(pixels: Uint8ClampedArray, width: number, height: number): number[] {
+  const samples: number[] = []
+
+  for (let y = 0; y < height; y += PIXEL_SAMPLE_STEP) {
+    for (let x = 0; x < width; x += PIXEL_SAMPLE_STEP) {
+      const alphaIndex = (y * width + x) * 4 + 3
+
+      if ((pixels[alphaIndex] ?? 0) >= 16) {
+        samples.push(alphaIndex)
       }
     }
   }
@@ -64,8 +77,15 @@ export function paintSparkCanvas(canvas: HTMLCanvasElement, litBombImage: HTMLIm
   context.clearRect(0, 0, canvas.width, canvas.height)
   context.drawImage(litBombImage, inset, inset, canvas.width - inset * 2, canvas.height - inset * 2)
   const sparkLayer = context.getImageData(0, 0, canvas.width, canvas.height)
-  const samples = isolateSparkPixels(sparkLayer.data, canvas.width, canvas.height)
-  context.putImageData(sparkLayer, 0, 0)
+  isolateSparkPixels(sparkLayer.data, canvas.width, canvas.height)
+
+  const offsetX = Math.round(canvas.width * SPARK_OFFSET_X_RATIO)
+  const offsetY = Math.round(canvas.height * SPARK_OFFSET_Y_RATIO)
+  context.clearRect(0, 0, canvas.width, canvas.height)
+  context.putImageData(sparkLayer, offsetX, offsetY)
+
+  const alignedSparkLayer = context.getImageData(0, 0, canvas.width, canvas.height)
+  const samples = collectSparkSampleIndices(alignedSparkLayer.data, canvas.width, canvas.height)
   sparkSampleIndices.set(canvas, samples)
   return true
 }

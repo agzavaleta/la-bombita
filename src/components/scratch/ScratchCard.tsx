@@ -264,7 +264,7 @@ export function ScratchCard({ onReveal, onScratchStart, onSequenceComplete }: Sc
           <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0 size-full" />
           <div
             aria-label="Chispa raspable de la mecha"
-            className="absolute left-[69%] top-[1%] size-[29%] touch-none cursor-crosshair"
+            className="absolute right-0 top-0 size-[34%] touch-none cursor-crosshair"
             onPointerCancel={finishPointer}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
